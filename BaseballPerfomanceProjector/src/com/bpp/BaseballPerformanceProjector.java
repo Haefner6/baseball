@@ -499,7 +499,7 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
 	private class WebServiceCall extends AsyncTask<String, Void, String[]> {
 		@Override
 		protected String[] doInBackground(String... playerId) {
-			String url = "http://threemuskets.com/getProjection.php";
+			String url = "http://threemuskets.com/BaseballApp/getBatterProjection.php";
 			//Log.println(Log.DEBUG, "myDebug", url);
 			String response = "ERROR";
 			HttpPost httppost;
