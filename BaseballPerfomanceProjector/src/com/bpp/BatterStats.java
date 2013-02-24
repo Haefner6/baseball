@@ -1,6 +1,9 @@
 package com.bpp;
 
 public class BatterStats {
+	
+	private String testerVar;
+	
 	private String playerId;
 	private String date;
 	private String lastName;
