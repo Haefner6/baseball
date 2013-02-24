@@ -45,6 +45,8 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
+        String testVar;
+        
         initializeTabs();
         loadPlayersDatabase();
         
