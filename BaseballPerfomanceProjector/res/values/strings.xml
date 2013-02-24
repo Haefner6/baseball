@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Baseball Performance Projector</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    
+    <string name="catcherPosHeading"><u><b>C</b></u></string>
+    <string name="firstBasePosHeading"><u><b>1B</b></u></string>
+    <string name="secondBasePosHeading"><u><b>2B</b></u></string>
+    <string name="SSPosHeading"><u><b>SS</b></u></string>
+    <string name="thirdBasePosHeading"><u><b>3B</b></u></string>
+    <string name="OFPosHeading"><u><b>OF</b></u></string>
+    <string name="DHPosHeading"><u><b>DH</b></u></string>
+    <string name="utilPosHeading"><u><b>UT</b></u></string>
+    <string name="benchPosHeading"><u><b>Bench</b></u></string>
+    <string name="lineup">Lineup</string>
+    
+    <string name="HR_stat"><b>HR</b></string>
+    <string name="run_stat"><b>R</b></string>
+    <string name="RBI_stat"><b>RBI</b></string>
+    <string name="SB_stat"><b>SB</b></string>
+    <string name="OBP_stat"><b>OBP</b></string>
+    
+    <string name="no_player">--</string>
+    <string name="no_stat">-</string>
+    <string name="project_performance">Project Performance</string>
+    
+
+</resources>

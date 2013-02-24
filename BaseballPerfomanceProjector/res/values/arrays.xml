@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <string-array name="default_player_firstNames">
+      <item>B.J.</item>
+      <item>Prince</item>
+      <item>Emilio</item>
+      <item>Matt</item>
+      <item>John</item>
+      <item>Chase</item>
+      <item>Evan</item>
+      <item>Eric</item>
+      <item>Jose</item>
+   </string-array>
+   
+   <string-array name="default_player_lastNames">
+      <item>Upton</item>
+      <item>Fielder</item>
+      <item>Bonifacio</item>
+      <item>Holliday</item>
+      <item>Jaso</item>
+      <item>Utley</item>
+      <item>Longoria</item>
+      <item>Hosmer</item>
+      <item>Altuve</item>
+   </string-array>
+   
+   <string-array name="default_player_bats">
+      <item>L</item>
+      <item>L</item>
+      <item>R</item>
+      <item>R</item>
+      <item>L</item>
+      <item>L</item>
+      <item>R</item>
+      <item>L</item>
+      <item>R</item>
+   </string-array>
+   
+   <string-array name="default_player_ids">
+      <item>uptob001</item>
+      <item>fielp001</item>
+      <item>bonie001</item>
+      <item>hollm001</item>
+      <item>jasoj001</item>
+      <item>utlec001</item>
+      <item>longe001</item>
+      <item>hosme001</item>
+      <item>altuj001</item>
+   </string-array>
+   
+   <string-array name="default_player_pos">
+      <item>OF</item>
+      <item>1B</item>
+      <item>SS</item>
+      <item>OF</item>
+      <item>C</item>
+      <item>2B</item>
+      <item>3B</item>
+      <item>1B</item>
+      <item>2B</item>
+   </string-array>
+</resources>
