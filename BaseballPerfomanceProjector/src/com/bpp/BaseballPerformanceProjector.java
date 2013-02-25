@@ -236,8 +236,14 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
     			break;
     		}
     	}
-    	playerView.clearPlayer();
-    	statsView.clearStats();
+    	if(playerView.getHeader().contains("Bench")) {
+    		playerListLayout.removeView(playerView);
+    		statsListLayout.removeView(statsView);
+    	} else {
+    		playerView.clearPlayer();
+    		playerView.setOnLongClickListener(null);
+    		statsView.clearStats();
+    	}
     }
     
     public void modifyPlayerDialog(final Player player) {
