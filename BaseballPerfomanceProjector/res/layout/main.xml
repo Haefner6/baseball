@@ -1,159 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/tabhost"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
-	<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/appLayout"
 		android:orientation="vertical"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent">
-		<TabWidget
-			android:id="@android:id/tabs"
+		<TabHost 
+			android:id="@+id/tabhost"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"/>
-		<FrameLayout
-			android:id="@android:id/tabcontent"
+			android:layout_height="0px"
+			android:layout_weight="8">
+		<LinearLayout
+			android:orientation="vertical"
 			android:layout_width="fill_parent"
-			android:layout_height="fill_parent" >
-			<LinearLayout
-				android:id="@+id/battersTab"
+			android:layout_height="fill_parent">
+			<TabWidget
+				android:id="@android:id/tabs"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"/>
+			<FrameLayout
+				android:id="@android:id/tabcontent"
 				android:orientation="vertical"
-				android:gravity="center_vertical"
-			    android:layout_width="fill_parent"
-			    android:layout_height="fill_parent" >
-			    <LinearLayout
-					android:orientation="horizontal"
-					android:gravity="center_vertical"
-				    android:layout_width="fill_parent"
-				    android:layout_height="20dp"
-				    android:background="@android:color/white" >
-				    <TextView
-						android:layout_width="0px"
-						android:layout_height="match_parent"
-						android:layout_weight="4"
-						android:text="@string/lineup" />
-				    <FrameLayout 
-					    android:layout_width="5dp" 
-				      	android:layout_height="match_parent" 
-				      	android:background="@android:color/black"/>
-				    <HorizontalScrollView
-				        android:id="@+id/statsHeaderScrollView"
-						android:layout_width="0px"
-						android:layout_height="match_parent"
-						android:layout_weight="7">
-					    <LinearLayout
-					        android:id="@+id/viewableStatsHeader"
-							android:orientation="horizontal"
-							android:layout_width="wrap_content"
-							android:layout_height="match_parent">
-						    <TextView
-							    android:layout_width="50dp"
-							    android:layout_height="wrap_content"
-							    android:gravity="center"
-							    android:text="@string/HR_stat" />
-						    <FrameLayout 
-							    android:layout_width="1dp" 
-						      	android:layout_height="match_parent" 
-						      	android:background="@android:color/black"/>
-						    <TextView
-							    android:layout_width="50dp"
-							    android:layout_height="wrap_content"
-							    android:gravity="center"
-							    android:text="@string/run_stat" />
-						    <FrameLayout 
-							    android:layout_width="1dp" 
-						      	android:layout_height="match_parent" 
-						      	android:background="@android:color/black"/>
-						    <TextView
-							    android:layout_width="50dp"
-							    android:layout_height="wrap_content"
-							    android:gravity="center"
-							    android:text="@string/RBI_stat" />
-						    <FrameLayout 
-							    android:layout_width="1dp" 
-						      	android:layout_height="match_parent" 
-						      	android:background="@android:color/black"/>
-						    <TextView
-							    android:layout_width="50dp"
-							    android:layout_height="wrap_content"
-							    android:gravity="center"
-							    android:text="@string/SB_stat" />
-						    <FrameLayout 
-							    android:layout_width="1dp" 
-						      	android:layout_height="match_parent" 
-						      	android:background="@android:color/black"/>
-						    <TextView
-							    android:layout_width="50dp"
-							    android:layout_height="wrap_content"
-							    android:gravity="center"
-							    android:text="@string/OBP_stat" />
-						    <FrameLayout 
-							    android:layout_width="1dp" 
-						      	android:layout_height="match_parent" 
-						      	android:background="@android:color/black"/>
-					    </LinearLayout>
-				    </HorizontalScrollView>
-			    </LinearLayout>
-			    <FrameLayout 
-					android:layout_height="1dp" 
-					android:layout_width="match_parent" 
-					android:background="@android:color/black"/>
-			    <LinearLayout
-					android:orientation="horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent" >
+				<LinearLayout
+					android:id="@+id/battersTab"
+					android:orientation="vertical"
 					android:gravity="center_vertical"
 				    android:layout_width="fill_parent"
 				    android:layout_height="fill_parent" >
-				    <com.bpp.TrackableScrollView
-				        android:id="@+id/playerListScrollView"
-				        android:orientation="vertical"
-				        android:layout_height="match_parent"
-		    			android:layout_width="0px"
-		    			android:layout_weight="4"
-		    			android:background="@android:color/white">
-					    <LinearLayout
-					        android:id="@+id/playersListLayout"
-							android:orientation="vertical"
-							android:layout_width="fill_parent"
-							android:layout_height="wrap_content" />
-					</com.bpp.TrackableScrollView>
-					<FrameLayout 
-					    android:layout_width="5dp" 
-				      	android:layout_height="match_parent" 
-				      	android:background="@android:color/black"/>
-					<com.bpp.TrackableScrollView
-					    android:id="@+id/statsScrollViewWrapper"
-					    android:orientation="vertical"
-				        android:layout_height="match_parent"
-		    			android:layout_width="0px"
-		    			android:layout_weight="7"
-		    			android:background="@android:color/white" >
-					   <com.bpp.TrackableHorizontalScrollView
-					       	android:id="@+id/statsScrollView"
-					        android:orientation="vertical"
-					        android:layout_height="wrap_content"
-			    			android:layout_width="match_parent"
-			    			android:background="@android:color/white">
-						   <LinearLayout
-						        android:id="@+id/statsListLayout"
-								android:orientation="vertical"
+				    <LinearLayout
+						android:orientation="horizontal"
+						android:gravity="center_vertical"
+					    android:layout_width="fill_parent"
+					    android:layout_height="20dp"
+					    android:background="@android:color/white" >
+					    <TextView
+							android:layout_width="0px"
+							android:layout_height="match_parent"
+							android:layout_weight="4"
+							android:text="@string/lineup" />
+					    <FrameLayout 
+						    android:layout_width="5dp" 
+					      	android:layout_height="match_parent" 
+					      	android:background="@android:color/black"/>
+					    <HorizontalScrollView
+					        android:id="@+id/statsHeaderScrollView"
+							android:layout_width="0px"
+							android:layout_height="match_parent"
+							android:layout_weight="7">
+						    <LinearLayout
+						        android:id="@+id/viewableStatsHeader"
+								android:orientation="horizontal"
 								android:layout_width="wrap_content"
+								android:layout_height="match_parent">
+							    <TextView
+								    android:layout_width="50dp"
+								    android:layout_height="wrap_content"
+								    android:gravity="center"
+								    android:text="@string/HR_stat" />
+							    <FrameLayout 
+								    android:layout_width="1dp" 
+							      	android:layout_height="match_parent" 
+							      	android:background="@android:color/black"/>
+							    <TextView
+								    android:layout_width="50dp"
+								    android:layout_height="wrap_content"
+								    android:gravity="center"
+								    android:text="@string/run_stat" />
+							    <FrameLayout 
+								    android:layout_width="1dp" 
+							      	android:layout_height="match_parent" 
+							      	android:background="@android:color/black"/>
+							    <TextView
+								    android:layout_width="50dp"
+								    android:layout_height="wrap_content"
+								    android:gravity="center"
+								    android:text="@string/RBI_stat" />
+							    <FrameLayout 
+								    android:layout_width="1dp" 
+							      	android:layout_height="match_parent" 
+							      	android:background="@android:color/black"/>
+							    <TextView
+								    android:layout_width="50dp"
+								    android:layout_height="wrap_content"
+								    android:gravity="center"
+								    android:text="@string/SB_stat" />
+							    <FrameLayout 
+								    android:layout_width="1dp" 
+							      	android:layout_height="match_parent" 
+							      	android:background="@android:color/black"/>
+							    <TextView
+								    android:layout_width="50dp"
+								    android:layout_height="wrap_content"
+								    android:gravity="center"
+								    android:text="@string/OBP_stat" />
+							    <FrameLayout 
+								    android:layout_width="1dp" 
+							      	android:layout_height="match_parent" 
+							      	android:background="@android:color/black"/>
+						    </LinearLayout>
+					    </HorizontalScrollView>
+				    </LinearLayout>
+				    <FrameLayout 
+						android:layout_height="1dp" 
+						android:layout_width="match_parent" 
+						android:background="@android:color/black"/>
+				    <LinearLayout
+						android:orientation="horizontal"
+						android:gravity="center_vertical"
+					    android:layout_width="fill_parent"
+					    android:layout_height="fill_parent" >
+					    <com.bpp.TrackableScrollView
+					        android:id="@+id/playerListScrollView"
+					        android:orientation="vertical"
+					        android:layout_height="match_parent"
+			    			android:layout_width="0px"
+			    			android:layout_weight="4"
+			    			android:background="@android:color/white">
+						    <LinearLayout
+						        android:id="@+id/playersListLayout"
+								android:orientation="vertical"
+								android:layout_width="fill_parent"
 								android:layout_height="wrap_content" />
-						</com.bpp.TrackableHorizontalScrollView>
-					</com.bpp.TrackableScrollView>
+						</com.bpp.TrackableScrollView>
+						<FrameLayout 
+						    android:layout_width="5dp" 
+					      	android:layout_height="match_parent" 
+					      	android:background="@android:color/black"/>
+						<com.bpp.TrackableScrollView
+						    android:id="@+id/statsScrollViewWrapper"
+						    android:orientation="vertical"
+					        android:layout_height="match_parent"
+			    			android:layout_width="0px"
+			    			android:layout_weight="7"
+			    			android:background="@android:color/white" >
+						   <com.bpp.TrackableHorizontalScrollView
+						       	android:id="@+id/statsScrollView"
+						        android:orientation="vertical"
+						        android:layout_height="wrap_content"
+				    			android:layout_width="match_parent"
+				    			android:background="@android:color/white">
+							   <LinearLayout
+							        android:id="@+id/statsListLayout"
+									android:orientation="vertical"
+									android:layout_width="wrap_content"
+									android:layout_height="wrap_content" />
+							</com.bpp.TrackableHorizontalScrollView>
+						</com.bpp.TrackableScrollView>
+					</LinearLayout>
 				</LinearLayout>
-			</LinearLayout>
-			
-			<LinearLayout
-				android:id="@+id/pitchersTab"
-				android:padding="5dp"
-				android:orientation="vertical"
-				android:layout_width="fill_parent"
-	    		android:layout_height="fill_parent">
-				<TextView
-					android:id="@+id/test9876"
-					android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"/>
-			</LinearLayout>
-		</FrameLayout>
+				
+				<LinearLayout
+					android:id="@+id/pitchersTab"
+					android:padding="5dp"
+					android:orientation="vertical"
+					android:layout_width="fill_parent"
+		    		android:layout_height="fill_parent">
+					<TextView
+						android:id="@+id/test9876"
+						android:layout_width="wrap_content"
+					    android:layout_height="wrap_content"/>
+				</LinearLayout>
+			</FrameLayout>
+		</LinearLayout>
+	</TabHost>
+	<LinearLayout
+		android:id="@+id/uiControls"
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+	    android:layout_height="0px"
+	    android:layout_weight="2">
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
 	</LinearLayout>
-</TabHost>
+</LinearLayout>

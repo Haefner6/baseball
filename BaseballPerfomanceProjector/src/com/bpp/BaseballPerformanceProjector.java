@@ -18,16 +18,19 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.database.SQLException;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
@@ -58,6 +61,36 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
         fillPositionList();
         restorePreviousPlayerConfiguration();
         addUserPlayers(); 
+    }
+    
+    @Override
+    public void onConfigurationChanged(Configuration configure){
+        super.onConfigurationChanged(configure);
+        LinearLayout appLayout = (LinearLayout)findViewById(R.id.appLayout);
+        TabHost tabHost = (TabHost)findViewById(R.id.tabhost);
+        LinearLayout uiControlsLayout = (LinearLayout)findViewById(R.id.uiControls);
+        LinearLayout.LayoutParams uiControlsParams;
+        LinearLayout.LayoutParams playerAndStatsParams;
+        
+        if(configure.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        	Log.println(Log.DEBUG, "myDebug", "Orientation is PORTRAIT");
+        	
+        	appLayout.setOrientation(LinearLayout.VERTICAL);
+        	uiControlsParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 2);
+        	playerAndStatsParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 8);
+        	
+        	tabHost.setLayoutParams(playerAndStatsParams);
+        	uiControlsLayout.setLayoutParams(uiControlsParams);
+        } else {
+        	Log.println(Log.DEBUG, "myDebug", "Orientation is LANDSCAPE");
+        	
+        	appLayout.setOrientation(LinearLayout.HORIZONTAL);
+        	uiControlsParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 2);
+        	playerAndStatsParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 8);
+        	
+        	tabHost.setLayoutParams(playerAndStatsParams);
+        	uiControlsLayout.setLayoutParams(uiControlsParams);
+        }
     }
     
     // Set the tab host specifications
