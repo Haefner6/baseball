@@ -20,6 +20,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.database.SQLException;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,6 +36,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -56,6 +61,7 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
         
         activePlayers = new String[9];
         
+        setImageSizes();
         syncStatsScrollWithHeader();
         
         fillPositionList();
@@ -71,26 +77,63 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
         LinearLayout uiControlsLayout = (LinearLayout)findViewById(R.id.uiControls);
         LinearLayout.LayoutParams uiControlsParams;
         LinearLayout.LayoutParams playerAndStatsParams;
+        FrameLayout dividerLine = (FrameLayout)findViewById(R.id.dividerLine);
+        float scale = getResources().getDisplayMetrics().density;
+		int dividerWidth = (int) (2 * scale + 0.5f);
         
         if(configure.orientation == Configuration.ORIENTATION_PORTRAIT) {
-        	Log.println(Log.DEBUG, "myDebug", "Orientation is PORTRAIT");
-        	
         	appLayout.setOrientation(LinearLayout.VERTICAL);
         	uiControlsParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 2);
         	playerAndStatsParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 8);
         	
+        	dividerLine.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, dividerWidth));
         	tabHost.setLayoutParams(playerAndStatsParams);
         	uiControlsLayout.setLayoutParams(uiControlsParams);
         } else {
-        	Log.println(Log.DEBUG, "myDebug", "Orientation is LANDSCAPE");
-        	
         	appLayout.setOrientation(LinearLayout.HORIZONTAL);
-        	uiControlsParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 2);
-        	playerAndStatsParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 8);
+        	uiControlsParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 3);
+        	playerAndStatsParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 7);
         	
+        	dividerLine.setLayoutParams(new LinearLayout.LayoutParams(dividerWidth, LayoutParams.MATCH_PARENT));
         	tabHost.setLayoutParams(playerAndStatsParams);
         	uiControlsLayout.setLayoutParams(uiControlsParams);
         }
+    }
+    
+    private void setImageSizes() {
+    	ImageView addPlayerImage = (ImageView)findViewById(R.id.addPlayerImage);
+    	scaleImage(addPlayerImage, 150);
+    }
+    
+    private void scaleImage(ImageView view, int boundBoxInDp)
+    {
+        Drawable drawing = view.getDrawable();
+        Bitmap bitmap = ((BitmapDrawable)drawing).getBitmap();
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        float xScale = ((float) boundBoxInDp) / width;
+        float yScale = ((float) boundBoxInDp) / height;
+        float scale = (xScale <= yScale) ? xScale : yScale;
+        Matrix matrix = new Matrix();
+        matrix.postScale(scale, scale);
+
+        Bitmap scaledBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+        BitmapDrawable result = new BitmapDrawable(scaledBitmap);
+        width = scaledBitmap.getWidth();
+        height = scaledBitmap.getHeight();
+
+        view.setImageDrawable(result);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
+        params.width = width;
+        params.height = height;
+        view.setLayoutParams(params);
+    }
+    
+    private int dpToPx(int dp)
+    {
+        float density = getApplicationContext().getResources().getDisplayMetrics().density;
+        return Math.round((float)dp * density);
     }
     
     // Set the tab host specifications

@@ -164,14 +164,34 @@
 			</FrameLayout>
 		</LinearLayout>
 	</TabHost>
+	<FrameLayout
+	    android:id="@+id/dividerLine"
+		android:layout_width="match_parent" 
+		android:layout_height="2dp" 
+		android:background="@android:color/black"/>
 	<LinearLayout
 		android:id="@+id/uiControls"
 		android:orientation="vertical"
-		android:layout_width="fill_parent"
+		android:layout_width="match_parent"
 	    android:layout_height="0px"
 	    android:layout_weight="2">
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"/>
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+		    android:layout_height="0px"
+		    android:layout_weight="2">
+			<ImageView
+		        android:id="@+id/addPlayerImage"
+		        android:padding="3dp"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:src="@android:drawable/ic_input_add" />
+		</LinearLayout>
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+		    android:layout_height="0px"
+		    android:layout_weight="2">
+		</LinearLayout>
 	</LinearLayout>
 </LinearLayout>
