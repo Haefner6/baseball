@@ -149,7 +149,6 @@
 						</com.bpp.TrackableScrollView>
 					</LinearLayout>
 				</LinearLayout>
-				
 				<LinearLayout
 					android:id="@+id/pitchersTab"
 					android:padding="5dp"
@@ -169,29 +168,92 @@
 		android:layout_width="match_parent" 
 		android:layout_height="2dp" 
 		android:background="@android:color/black"/>
+	
 	<LinearLayout
 		android:id="@+id/uiControls"
-		android:orientation="vertical"
+		android:orientation="horizontal"
 		android:layout_width="match_parent"
 	    android:layout_height="0px"
 	    android:layout_weight="2">
 		<LinearLayout
-			android:orientation="horizontal"
-			android:layout_width="match_parent"
-		    android:layout_height="0px"
+		    android:orientation="horizontal"
+			android:layout_width="0px"
+		    android:layout_height="match_parent"
 		    android:layout_weight="2">
 			<ImageView
-		        android:id="@+id/addPlayerImage"
-		        android:padding="3dp"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:src="@android:drawable/ic_input_add" />
+			    android:id="@+id/addPlayerImage"
+				android:paddingLeft="3dp"
+				android:paddingTop="3dp"
+				android:paddingBottom="3dp"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_gravity="center_vertical"
+			    android:src="@android:drawable/ic_input_add" />
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_gravity="center_vertical" >
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/add" />
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/player" />
+			</LinearLayout>
 		</LinearLayout>
 		<LinearLayout
 			android:orientation="horizontal"
-			android:layout_width="match_parent"
-		    android:layout_height="0px"
-		    android:layout_weight="2">
+			android:layout_width="0px"
+			android:layout_height="match_parent"
+			android:layout_weight="2"
+			android:gravity="center_horizontal" >
+			<TextView
+				android:id="@+id/previousDate"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/previousDate" />
+			<TextView
+				android:id="@+id/currentDate"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="1dp"
+				android:text="3/31" />
+			<TextView
+				android:id="@+id/nextDate"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingLeft="1dp"
+				android:text="@string/nextDate" />
+		</LinearLayout>
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="0px"
+			android:layout_height="match_parent"
+			android:padding="4dp"
+			android:layout_weight="2" >
+			<Button
+				android:id="@+id/projectPerformanceButton"
+				android:layout_width="wrap_content"
+				android:layout_height="0px"
+				android:layout_weight="3"
+				android:textColor="#ffffff"
+				android:background="@drawable/bpp_button_selector"
+				android:text="@string/project_performance" />
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="0px"
+				android:layout_weight="1" />
+			<Button
+				android:id="@+id/optimizeLineupButton"
+				android:layout_width="wrap_content"
+				android:layout_height="0px"
+				android:layout_weight="3"
+				android:textColor="#ffffff"
+				android:background="@drawable/bpp_button_selector"
+				android:text="@string/optimize_lineup" />
 		</LinearLayout>
 	</LinearLayout>
 </LinearLayout>

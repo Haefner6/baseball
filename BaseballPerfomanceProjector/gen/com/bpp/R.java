@@ -18,27 +18,35 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int bpp_button_normal=0x7f020000;
+        public static final int bpp_button_pressed=0x7f020001;
+        public static final int bpp_button_selector=0x7f020002;
+        public static final int ic_launcher=0x7f020003;
     }
     public static final class id {
         public static final int addPlayerImage=0x7f080012;
         public static final int appLayout=0x7f080004;
         public static final int battersTab=0x7f080006;
-        public static final int checkbox_catcher=0x7f080014;
-        public static final int checkbox_firstBase=0x7f080015;
-        public static final int checkbox_outfield=0x7f080019;
-        public static final int checkbox_secondBase=0x7f080016;
-        public static final int checkbox_shortstop=0x7f080017;
-        public static final int checkbox_thirdBase=0x7f080018;
+        public static final int checkbox_catcher=0x7f080019;
+        public static final int checkbox_firstBase=0x7f08001a;
+        public static final int checkbox_outfield=0x7f08001e;
+        public static final int checkbox_secondBase=0x7f08001b;
+        public static final int checkbox_shortstop=0x7f08001c;
+        public static final int checkbox_thirdBase=0x7f08001d;
         public static final int chosenPlayer=0x7f080003;
         public static final int content=0x7f080001;
+        public static final int currentDate=0x7f080014;
         public static final int dividerLine=0x7f080010;
-        public static final int menu_settings=0x7f08001a;
+        public static final int menu_settings=0x7f08001f;
+        public static final int nextDate=0x7f080015;
+        public static final int optimizeLineupButton=0x7f080017;
         public static final int pitchersTab=0x7f08000e;
         public static final int playerListScrollView=0x7f080009;
-        public static final int playerName=0x7f080013;
+        public static final int playerName=0x7f080018;
         public static final int playersListLayout=0x7f08000a;
         public static final int players_list=0x7f080002;
+        public static final int previousDate=0x7f080013;
+        public static final int projectPerformanceButton=0x7f080016;
         public static final int statsHeaderScrollView=0x7f080007;
         public static final int statsListLayout=0x7f08000d;
         public static final int statsScrollView=0x7f08000c;
@@ -59,12 +67,13 @@ public final class R {
     }
     public static final class string {
         public static final int DHPosHeading=0x7f050009;
-        public static final int HR_stat=0x7f05000d;
-        public static final int OBP_stat=0x7f050011;
+        public static final int HR_stat=0x7f050011;
+        public static final int OBP_stat=0x7f050015;
         public static final int OFPosHeading=0x7f050008;
-        public static final int RBI_stat=0x7f05000f;
-        public static final int SB_stat=0x7f050010;
+        public static final int RBI_stat=0x7f050013;
+        public static final int SB_stat=0x7f050014;
         public static final int SSPosHeading=0x7f050006;
+        public static final int add=0x7f05000d;
         public static final int app_name=0x7f050000;
         public static final int benchPosHeading=0x7f05000b;
         public static final int catcherPosHeading=0x7f050003;
@@ -72,10 +81,14 @@ public final class R {
         public static final int hello_world=0x7f050001;
         public static final int lineup=0x7f05000c;
         public static final int menu_settings=0x7f050002;
-        public static final int no_player=0x7f050012;
-        public static final int no_stat=0x7f050013;
-        public static final int project_performance=0x7f050014;
-        public static final int run_stat=0x7f05000e;
+        public static final int nextDate=0x7f050010;
+        public static final int no_player=0x7f050016;
+        public static final int no_stat=0x7f050017;
+        public static final int optimize_lineup=0x7f050019;
+        public static final int player=0x7f05000e;
+        public static final int previousDate=0x7f05000f;
+        public static final int project_performance=0x7f050018;
+        public static final int run_stat=0x7f050012;
         public static final int secondBasePosHeading=0x7f050005;
         public static final int thirdBasePosHeading=0x7f050007;
         public static final int utilPosHeading=0x7f05000a;

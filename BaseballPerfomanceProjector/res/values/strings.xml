@@ -15,6 +15,10 @@
     <string name="utilPosHeading"><u><b>UT</b></u></string>
     <string name="benchPosHeading"><u><b>Bench</b></u></string>
     <string name="lineup">Lineup</string>
+    <string name="add">Add</string>
+    <string name="player">Player</string>
+    <string name="previousDate">&lt;</string>
+    <string name="nextDate">></string>
     
     <string name="HR_stat"><b>HR</b></string>
     <string name="run_stat"><b>R</b></string>
@@ -25,6 +29,7 @@
     <string name="no_player">--</string>
     <string name="no_stat">-</string>
     <string name="project_performance">Project Performance</string>
+    <string name="optimize_lineup">Optimize Lineup</string>
     
 
 </resources>
