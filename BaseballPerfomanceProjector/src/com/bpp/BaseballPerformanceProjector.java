@@ -20,12 +20,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.database.SQLException;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,7 +34,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -63,13 +57,14 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
         positionList = new ArrayList<String>();
         
         activePlayers = new String[9];
-        
-        setImageSizes();
+
         syncStatsScrollWithHeader();
         
         fillPositionList();
         restorePreviousPlayerConfiguration();
         addUserPlayers(); 
+        
+        setInterfaceFeatures();
     }
     
     @Override
@@ -103,37 +98,44 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
         }
     }
     
-    private void setImageSizes() {
-    	Button addPlayerButton = (Button)findViewById(R.id.addPlayerImage);
-    	//scaleImage(addPlayerImage, 150);
-    	final int pressedColor = Color.GREEN;
-    	//addPlayerImage.setColorFilter(pressedColor, Mode.SRC_ATOP);
-    	
+    public void setInterfaceFeatures() {
+    	TextView currentDate = (TextView)findViewById(R.id.currentDate);
+        maximizeTextSize(currentDate);
+        
+        Button addPlayerButton = (Button)findViewById(R.id.addPlayerButton);
+        Button previousDateButton = (Button)findViewById(R.id.previousDate);
+        Button projectPerformanceButton = (Button)findViewById(R.id.projectPerformanceButton);
+        
+        addPlayerButton.setOnClickListener(new View.OnClickListener()
+        {
+        	public void onClick(View v) 
+        	{ 	
+        		addPlayerDialog();
+       		}
+        });
+        
+        projectPerformanceButton.setOnClickListener(new View.OnClickListener()
+        {
+        	public void onClick(View v) 
+        	{ 	
+        		makeDailyProjections();
+       		}
+        });
     }
     
-    private void scaleImage(ImageView view, int boundBoxInDp)
-    {
-        Drawable drawing = view.getDrawable();
-        Bitmap bitmap = ((BitmapDrawable)drawing).getBitmap();
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
+    // Sets the TextView's size to the largest possible size while still fitting in view
+    public void maximizeTextSize(TextView textView) {
+    	String text = textView.getText().toString();
+    	int textViewWidth = textView.getWidth();
+    	int textSize = 20;
 
-        float xScale = ((float) boundBoxInDp) / width;
-        float yScale = ((float) boundBoxInDp) / height;
-        float scale = (xScale <= yScale) ? xScale : yScale;
-        Matrix matrix = new Matrix();
-        matrix.postScale(scale, scale);
-
-        Bitmap scaledBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
-        BitmapDrawable result = new BitmapDrawable(scaledBitmap);
-        width = scaledBitmap.getWidth();
-        height = scaledBitmap.getHeight();
-
-        view.setImageDrawable(result);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
-        params.width = width;
-        params.height = height;
-        view.setLayoutParams(params);
+    	Paint paint = textView.getPaint();
+    	for (textSize = 20; textSize <= 100; ++textSize) {
+    	    if (paint.measureText(text, 0, text.length()) > textViewWidth) {
+    	    	textView.setTextSize(textSize);
+    	        break;
+    	    }
+    	}
     }
     
     private int dpToPx(int dp)
@@ -234,7 +236,7 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
        List<Player> userPlayerList = databaseHandler.getAllUserPlayers();
 
        for (int i = 0; i < userPlayerList.size(); i++) {
-    	   Log.println(Log.DEBUG, "myDebug", "Adding " + userPlayerList.get(i).getPlayerFullName() + " " + userPlayerList.get(i).getPosition());
+    	   //Log.println(Log.DEBUG, "myDebug", "Adding " + userPlayerList.get(i).getPlayerFullName() + " " + userPlayerList.get(i).getPosition());
     	   addPlayer(userPlayerList.get(i));
        } // end for loop
     } // end method addSamplePlayers
@@ -457,8 +459,7 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
     }
     
     private void populateMenu(Menu menu) {
-    	menu.add(Menu.NONE, 1, Menu.NONE, "Project Performance");
-    	menu.add(Menu.NONE, 2, Menu.NONE, "Add Player");
+    	menu.add(Menu.NONE, 1, Menu.NONE, "Settings");
     }
     
     @Override
@@ -466,10 +467,7 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
     	int nItem =item.getItemId();
     	switch(nItem) {
         	case 1:
-        		makeDailyProjections();
-        		break;
-        	case 2:
-        		addPlayerDialog();
+        		// Open Settings dialog or activity
         		break;
     	}
     	return true;

@@ -18,13 +18,22 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int bpp_button_normal=0x7f020000;
-        public static final int bpp_button_pressed=0x7f020001;
-        public static final int bpp_button_selector=0x7f020002;
-        public static final int ic_launcher=0x7f020003;
+        public static final int add_normal=0x7f020000;
+        public static final int add_player_button=0x7f020001;
+        public static final int add_pressed=0x7f020002;
+        public static final int bpp_button_normal=0x7f020003;
+        public static final int bpp_button_pressed=0x7f020004;
+        public static final int bpp_button_selector=0x7f020005;
+        public static final int ic_launcher=0x7f020006;
+        public static final int next_date=0x7f020007;
+        public static final int next_date_button=0x7f020008;
+        public static final int next_date_pressed=0x7f020009;
+        public static final int previous_date=0x7f02000a;
+        public static final int previous_date_button=0x7f02000b;
+        public static final int previous_date_pressed=0x7f02000c;
     }
     public static final class id {
-        public static final int addPlayerImage=0x7f080012;
+        public static final int addPlayerButton=0x7f080012;
         public static final int appLayout=0x7f080004;
         public static final int battersTab=0x7f080006;
         public static final int checkbox_catcher=0x7f080019;
