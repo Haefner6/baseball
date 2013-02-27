@@ -21,7 +21,9 @@ import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.database.SQLException;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -33,6 +35,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
@@ -101,8 +104,11 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
     }
     
     private void setImageSizes() {
-    	ImageView addPlayerImage = (ImageView)findViewById(R.id.addPlayerImage);
-    	scaleImage(addPlayerImage, 150);
+    	Button addPlayerButton = (Button)findViewById(R.id.addPlayerImage);
+    	//scaleImage(addPlayerImage, 150);
+    	final int pressedColor = Color.GREEN;
+    	//addPlayerImage.setColorFilter(pressedColor, Mode.SRC_ATOP);
+    	
     }
     
     private void scaleImage(ImageView view, int boundBoxInDp)

@@ -180,52 +180,41 @@
 			android:layout_width="0px"
 		    android:layout_height="match_parent"
 		    android:layout_weight="2">
-			<ImageView
+			<Button
 			    android:id="@+id/addPlayerImage"
-				android:paddingLeft="3dp"
-				android:paddingTop="3dp"
-				android:paddingBottom="3dp"
 			    android:layout_width="wrap_content"
 			    android:layout_height="wrap_content"
 			    android:layout_gravity="center_vertical"
-			    android:src="@android:drawable/ic_input_add" />
-			<LinearLayout
-				android:orientation="vertical"
-				android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:layout_gravity="center_vertical" >
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="@string/add" />
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="@string/player" />
-			</LinearLayout>
+			    android:background="@android:drawable/ic_input_add" />
 		</LinearLayout>
 		<LinearLayout
 			android:orientation="horizontal"
 			android:layout_width="0px"
 			android:layout_height="match_parent"
-			android:layout_weight="2"
+			android:layout_weight="4"
+			android:paddingLeft="2dp"
 			android:gravity="center_horizontal" >
 			<TextView
 				android:id="@+id/previousDate"
-				android:layout_width="wrap_content"
+				android:layout_width="0px"
 				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:textStyle="bold"
 				android:text="@string/previousDate" />
 			<TextView
 				android:id="@+id/currentDate"
-				android:layout_width="wrap_content"
+				android:layout_width="0px"
 				android:layout_height="wrap_content"
-				android:paddingLeft="1dp"
-				android:text="3/31" />
+				android:layout_weight="2"
+				android:textStyle="bold"
+				android:layout_gravity="center_horizontal"
+				android:text=" 3/31" />
 			<TextView
 				android:id="@+id/nextDate"
-				android:layout_width="wrap_content"
+				android:layout_width="0px"
 				android:layout_height="wrap_content"
-				android:paddingLeft="1dp"
+				android:layout_weight="1"
+				android:textStyle="bold"
 				android:text="@string/nextDate" />
 		</LinearLayout>
 		<LinearLayout
@@ -233,12 +222,12 @@
 			android:layout_width="0px"
 			android:layout_height="match_parent"
 			android:padding="4dp"
-			android:layout_weight="2" >
+			android:layout_weight="3" >
 			<Button
 				android:id="@+id/projectPerformanceButton"
 				android:layout_width="wrap_content"
 				android:layout_height="0px"
-				android:layout_weight="3"
+				android:layout_weight="5"
 				android:textColor="#ffffff"
 				android:background="@drawable/bpp_button_selector"
 				android:text="@string/project_performance" />
@@ -250,7 +239,7 @@
 				android:id="@+id/optimizeLineupButton"
 				android:layout_width="wrap_content"
 				android:layout_height="0px"
-				android:layout_weight="3"
+				android:layout_weight="5"
 				android:textColor="#ffffff"
 				android:background="@drawable/bpp_button_selector"
 				android:text="@string/optimize_lineup" />
