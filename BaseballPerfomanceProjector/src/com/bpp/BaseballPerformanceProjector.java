@@ -22,6 +22,7 @@ import android.content.res.Configuration;
 import android.database.SQLException;
 import android.graphics.Paint;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,7 @@ import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 
 public class BaseballPerformanceProjector extends Activity implements HorizontalScrollViewListener, ScrollViewListener {
@@ -71,50 +73,71 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
     public void onConfigurationChanged(Configuration configure){
         super.onConfigurationChanged(configure);
         LinearLayout appLayout = (LinearLayout)findViewById(R.id.appLayout);
+        LinearLayout tabsStatsPlayersLayout = (LinearLayout)findViewById(R.id.tabsStatsPlayersLayout);
         TabHost tabHost = (TabHost)findViewById(R.id.tabhost);
-        LinearLayout uiControlsLayout = (LinearLayout)findViewById(R.id.uiControls);
+        TabWidget tabWidget = tabHost.getTabWidget();
+        FrameLayout tabContent = tabHost.getTabContentView();
+        InterfaceControls interfaceControls = (InterfaceControls)findViewById(R.id.uiControls);
+        
+        
+        LinearLayout.LayoutParams tabWidgetParams;
+        LinearLayout.LayoutParams tabContentParams;
         LinearLayout.LayoutParams uiControlsParams;
         LinearLayout.LayoutParams playerAndStatsParams;
+        
         FrameLayout dividerLine = (FrameLayout)findViewById(R.id.dividerLine);
         float scale = getResources().getDisplayMetrics().density;
 		int dividerWidth = (int) (2 * scale + 0.5f);
         
         if(configure.orientation == Configuration.ORIENTATION_PORTRAIT) {
         	appLayout.setOrientation(LinearLayout.VERTICAL);
+        	tabsStatsPlayersLayout.setOrientation(LinearLayout.VERTICAL);
+        	tabWidget.setOrientation(LinearLayout.HORIZONTAL);
+        	
+        	tabWidgetParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 1);
+        	tabContentParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 8);
+        	tabWidget.setLayoutParams(tabWidgetParams);
+        	tabContent.setLayoutParams(tabContentParams);
+        	
         	uiControlsParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 2);
         	playerAndStatsParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 8);
         	
         	dividerLine.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, dividerWidth));
         	tabHost.setLayoutParams(playerAndStatsParams);
-        	uiControlsLayout.setLayoutParams(uiControlsParams);
+        	interfaceControls.setLayoutParams(uiControlsParams);
+
+        	interfaceControls.setVerticalOrientation();
         } else {
         	appLayout.setOrientation(LinearLayout.HORIZONTAL);
-        	uiControlsParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 3);
-        	playerAndStatsParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 7);
+        	tabsStatsPlayersLayout.setOrientation(LinearLayout.HORIZONTAL);
+        	tabWidget.setOrientation(LinearLayout.VERTICAL);
         	
+        	tabWidgetParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
+        	tabContentParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 8);
+        	tabWidget.setLayoutParams(tabWidgetParams);
+        	tabContent.setLayoutParams(tabContentParams);
+        	
+        	uiControlsParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 2);
+        	playerAndStatsParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 8);
         	dividerLine.setLayoutParams(new LinearLayout.LayoutParams(dividerWidth, LayoutParams.MATCH_PARENT));
         	tabHost.setLayoutParams(playerAndStatsParams);
-        	uiControlsLayout.setLayoutParams(uiControlsParams);
+        	interfaceControls.setLayoutParams(uiControlsParams);
+
+        	interfaceControls.setHorizontalOrientation();
         }
     }
     
     public void setInterfaceFeatures() {
-    	TextView currentDate = (TextView)findViewById(R.id.currentDate);
-        maximizeTextSize(currentDate);
-        
-        Button addPlayerButton = (Button)findViewById(R.id.addPlayerButton);
-        Button previousDateButton = (Button)findViewById(R.id.previousDate);
-        Button projectPerformanceButton = (Button)findViewById(R.id.projectPerformanceButton);
-        
-        addPlayerButton.setOnClickListener(new View.OnClickListener()
+    	final InterfaceControls interfaceControls = (InterfaceControls)findViewById(R.id.uiControls);
+    	interfaceControls.setAddPlayerListener(new View.OnClickListener()
         {
         	public void onClick(View v) 
         	{ 	
+        		interfaceControls.setAddPlayerClickable(false);
         		addPlayerDialog();
        		}
         });
-        
-        projectPerformanceButton.setOnClickListener(new View.OnClickListener()
+    	interfaceControls.setProjectPerformanceListener(new View.OnClickListener()
         {
         	public void onClick(View v) 
         	{ 	
@@ -227,9 +250,8 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
     	positionList.add("OF");
     	positionList.add("OF");
     	positionList.add("UT");
-    }
+    }  
     
- // add the sample players
     private void addUserPlayers() {
        // load the array of player names from resources
        DatabaseHandler databaseHandler = new DatabaseHandler(this);
@@ -239,6 +261,7 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
     	   //Log.println(Log.DEBUG, "myDebug", "Adding " + userPlayerList.get(i).getPlayerFullName() + " " + userPlayerList.get(i).getPosition());
     	   addPlayer(userPlayerList.get(i));
        } // end for loop
+       databaseHandler.close();
     } // end method addSamplePlayers
     
     // add a new player to the player Array List and slot it
@@ -451,27 +474,6 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
 			statsScrollWrapper.scrollTo(statsScrollWrapper.getScrollX(), y);
 		}
 	}
-	
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-    	populateMenu(menu);
-    	return(super.onCreateOptionsMenu(menu));
-    }
-    
-    private void populateMenu(Menu menu) {
-    	menu.add(Menu.NONE, 1, Menu.NONE, "Settings");
-    }
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	int nItem =item.getItemId();
-    	switch(nItem) {
-        	case 1:
-        		// Open Settings dialog or activity
-        		break;
-    	}
-    	return true;
-    }
     
     private void addPlayerDialog()
     {
@@ -524,27 +526,18 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
     	addPlayerAlert.setView(add_player);
     	addPlayerAlert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
     		public void onClick(DialogInterface dialog, int which) {
-    			try {
-    				if(selectedPlayer.hasId()) {
-    					Log.println(Log.DEBUG, "myDebug", "Should add " + selectedPlayer.getPlayerSummary());
-    					addPlayer(selectedPlayer);
-    				}
-    			} 
-    			catch(Exception e) {
-    				Log.println(Log.DEBUG, "myDebug", "Caught exception in addPlayerDialog()");
-    				return;
+    			if(selectedPlayer.hasId()) {
+    				Log.println(Log.DEBUG, "myDebug", "Should add " + selectedPlayer.getPlayerSummary());
+    				addPlayer(selectedPlayer);
+    				final InterfaceControls interfaceControls = (InterfaceControls)findViewById(R.id.uiControls);
+    				interfaceControls.setAddPlayerClickable(true);
     			}
     		}	
     	});
     	addPlayerAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
     		public void onClick(DialogInterface dialog, int which) {
-    			try {
-    				
-    			} 
-    			catch(Exception e) {
-    				Log.println(Log.DEBUG, "myDebug", "Caught exception in addPlayerDialog()");
-    				return;
-    			}
+    			final InterfaceControls interfaceControls = (InterfaceControls)findViewById(R.id.uiControls);
+				interfaceControls.setAddPlayerClickable(true);
     		}	
     	}).show();
     }

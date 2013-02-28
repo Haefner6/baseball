@@ -28,8 +28,8 @@
     
     <string name="no_player">--</string>
     <string name="no_stat">-</string>
-    <string name="project_performance">Project Performance</string>
-    <string name="optimize_lineup">Optimize Lineup</string>
+    <string name="project_performance">Project\nPerformance</string>
+    <string name="optimize_lineup">Optimize\nLineup</string>
     
 
 </resources>
