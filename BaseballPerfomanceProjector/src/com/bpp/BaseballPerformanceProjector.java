@@ -13,6 +13,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -52,7 +53,7 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        initializeTabs();
+        
         loadPlayersDatabase();
         
         playersArrayList = new ArrayList<Player>();
@@ -69,21 +70,24 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
         setInterfaceFeatures();
     }
     
+    
+    
     @Override
     public void onConfigurationChanged(Configuration configure){
         super.onConfigurationChanged(configure);
+        
         LinearLayout appLayout = (LinearLayout)findViewById(R.id.appLayout);
         LinearLayout tabsStatsPlayersLayout = (LinearLayout)findViewById(R.id.tabsStatsPlayersLayout);
-        TabHost tabHost = (TabHost)findViewById(R.id.tabhost);
-        TabWidget tabWidget = tabHost.getTabWidget();
-        FrameLayout tabContent = tabHost.getTabContentView();
+        
+        TabControls tabControls = (TabControls)findViewById(R.id.tabControls);
+        FrameLayout tabContent = (FrameLayout)findViewById(R.id.tabcontent);
+        
         InterfaceControls interfaceControls = (InterfaceControls)findViewById(R.id.uiControls);
         
-        
-        LinearLayout.LayoutParams tabWidgetParams;
+        LinearLayout.LayoutParams tabsStatsPlayersParams;
+        LinearLayout.LayoutParams tabControlParams;
         LinearLayout.LayoutParams tabContentParams;
         LinearLayout.LayoutParams uiControlsParams;
-        LinearLayout.LayoutParams playerAndStatsParams;
         
         FrameLayout dividerLine = (FrameLayout)findViewById(R.id.dividerLine);
         float scale = getResources().getDisplayMetrics().density;
@@ -92,40 +96,45 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
         if(configure.orientation == Configuration.ORIENTATION_PORTRAIT) {
         	appLayout.setOrientation(LinearLayout.VERTICAL);
         	tabsStatsPlayersLayout.setOrientation(LinearLayout.VERTICAL);
-        	tabWidget.setOrientation(LinearLayout.HORIZONTAL);
         	
-        	tabWidgetParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 1);
+        	tabControls.setVerticalOrientation();
+        	
+        	tabsStatsPlayersParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 8);
+        	tabsStatsPlayersLayout.setLayoutParams(tabsStatsPlayersParams);
+        	
+        	tabControlParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 1);
         	tabContentParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 8);
-        	tabWidget.setLayoutParams(tabWidgetParams);
+        	
+        	tabControls.setLayoutParams(tabControlParams);
         	tabContent.setLayoutParams(tabContentParams);
         	
         	uiControlsParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 2);
-        	playerAndStatsParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 8);
         	
         	dividerLine.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, dividerWidth));
-        	tabHost.setLayoutParams(playerAndStatsParams);
         	interfaceControls.setLayoutParams(uiControlsParams);
 
         	interfaceControls.setVerticalOrientation();
         } else {
         	appLayout.setOrientation(LinearLayout.HORIZONTAL);
         	tabsStatsPlayersLayout.setOrientation(LinearLayout.HORIZONTAL);
-        	tabWidget.setOrientation(LinearLayout.VERTICAL);
+        	tabControls.setHorizontalOrientation();
         	
-        	tabWidgetParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
+        	tabsStatsPlayersParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 8);
+        	tabsStatsPlayersLayout.setLayoutParams(tabsStatsPlayersParams);
+        	
+        	tabControlParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
         	tabContentParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 8);
-        	tabWidget.setLayoutParams(tabWidgetParams);
+        	
+        	tabControls.setLayoutParams(tabControlParams);
         	tabContent.setLayoutParams(tabContentParams);
         	
         	uiControlsParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 2);
-        	playerAndStatsParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 8);
         	dividerLine.setLayoutParams(new LinearLayout.LayoutParams(dividerWidth, LayoutParams.MATCH_PARENT));
-        	tabHost.setLayoutParams(playerAndStatsParams);
         	interfaceControls.setLayoutParams(uiControlsParams);
 
         	interfaceControls.setHorizontalOrientation();
         }
-    }
+    } 
     
     public void setInterfaceFeatures() {
     	final InterfaceControls interfaceControls = (InterfaceControls)findViewById(R.id.uiControls);
@@ -159,33 +168,6 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
     	        break;
     	    }
     	}
-    }
-    
-    private int dpToPx(int dp)
-    {
-        float density = getApplicationContext().getResources().getDisplayMetrics().density;
-        return Math.round((float)dp * density);
-    }
-    
-    // Set the tab host specifications
-    private void initializeTabs() {
-    	TabHost tabs = (TabHost)findViewById(R.id.tabhost);
-        tabs.setup();
-        // Tab 1
-        TabHost.TabSpec spec = tabs.newTabSpec("tag1");
-        spec.setContent(R.id.battersTab);
-        spec.setIndicator("Batters");
-        tabs.addTab(spec);
-        
-        //Tab 2
-        spec = tabs.newTabSpec("tag2");
-        spec.setContent(R.id.pitchersTab);
-        spec.setIndicator("Pitchers");
-        tabs.addTab(spec);
-        
-        for (int i = 0; i < tabs.getTabWidget().getChildCount(); i++) {
-            tabs.getTabWidget().getChildAt(i).setPadding(10,5,10,10);
-        } // end for
     }
     
     public void loadPlayersDatabase() {

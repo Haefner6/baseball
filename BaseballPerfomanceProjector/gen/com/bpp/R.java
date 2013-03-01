@@ -37,32 +37,33 @@ public final class R {
     }
     public static final class id {
         public static final int appLayout=0x7f080004;
-        public static final int battersTab=0x7f080007;
-        public static final int checkbox_catcher=0x7f080014;
-        public static final int checkbox_firstBase=0x7f080015;
-        public static final int checkbox_outfield=0x7f080019;
-        public static final int checkbox_secondBase=0x7f080016;
-        public static final int checkbox_shortstop=0x7f080017;
-        public static final int checkbox_thirdBase=0x7f080018;
+        public static final int battersTab=0x7f080008;
+        public static final int checkbox_catcher=0x7f080015;
+        public static final int checkbox_firstBase=0x7f080016;
+        public static final int checkbox_outfield=0x7f08001a;
+        public static final int checkbox_secondBase=0x7f080017;
+        public static final int checkbox_shortstop=0x7f080018;
+        public static final int checkbox_thirdBase=0x7f080019;
         public static final int chosenPlayer=0x7f080003;
         public static final int content=0x7f080001;
-        public static final int dividerLine=0x7f080011;
-        public static final int menu_settings=0x7f08001a;
-        public static final int pitchersTab=0x7f08000f;
-        public static final int playerListScrollView=0x7f08000a;
-        public static final int playerName=0x7f080013;
-        public static final int playersListLayout=0x7f08000b;
+        public static final int dividerLine=0x7f080012;
+        public static final int menu_settings=0x7f08001b;
+        public static final int pitchersTab=0x7f080010;
+        public static final int playerListScrollView=0x7f08000b;
+        public static final int playerName=0x7f080014;
+        public static final int playersListLayout=0x7f08000c;
         public static final int players_list=0x7f080002;
-        public static final int statsHeaderScrollView=0x7f080008;
-        public static final int statsListLayout=0x7f08000e;
-        public static final int statsScrollView=0x7f08000d;
-        public static final int statsScrollViewWrapper=0x7f08000c;
-        public static final int tabhost=0x7f080005;
-        public static final int tabsStatsPlayersLayout=0x7f080006;
-        public static final int test9876=0x7f080010;
+        public static final int statsHeaderScrollView=0x7f080009;
+        public static final int statsListLayout=0x7f08000f;
+        public static final int statsScrollView=0x7f08000e;
+        public static final int statsScrollViewWrapper=0x7f08000d;
+        public static final int tabControls=0x7f080006;
+        public static final int tabcontent=0x7f080007;
+        public static final int tabsStatsPlayersLayout=0x7f080005;
+        public static final int test9876=0x7f080011;
         public static final int title=0x7f080000;
-        public static final int uiControls=0x7f080012;
-        public static final int viewableStatsHeader=0x7f080009;
+        public static final int uiControls=0x7f080013;
+        public static final int viewableStatsHeader=0x7f08000a;
     }
     public static final class layout {
         public static final int add_player=0x7f030000;
