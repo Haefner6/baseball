@@ -204,28 +204,33 @@ public class InterfaceControls extends LinearLayout {
 		TextView currentDate = (TextView)this.findViewById(3002);
 		Button nextDate = (Button)this.findViewById(3003);
 		
-		LinearLayout.LayoutParams previousDateParams = new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 2);
+		LinearLayout.LayoutParams previousDateParams = new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1);
 		previousDateParams.gravity = Gravity.CENTER; 
 		LinearLayout.LayoutParams currentDateParams = new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 2);
 		currentDateParams.gravity = Gravity.CENTER; 
 		
 		previousDate.setLayoutParams(previousDateParams);
 		currentDate.setLayoutParams(currentDateParams);
+		currentDate.setGravity(Gravity.CENTER);
 		//currentDate.setPadding(0, 0, 0, 5);
 		nextDate.setLayoutParams(previousDateParams);
 		
 		// Projection Buttons Layout
 		LinearLayout projectionButtonsLayout = (LinearLayout)this.findViewById(4000);
 		projectionButtonsLayout.setOrientation(LinearLayout.VERTICAL);
-		LinearLayout.LayoutParams projectionButtonsParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 3);
-		projectionButtonsLayout.setLayoutParams(projectionButtonsParams);
+		LinearLayout.LayoutParams projectionButtonsLayoutParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 3);
+		projectionButtonsLayout.setLayoutParams(projectionButtonsLayoutParams);
+		projectionButtonsLayout.setPadding(5,5,5,5);
 		
 		Button projectPerformanceButton = (Button)findViewById(4001);
 		TextView projectionButtonsDivider = (TextView)findViewById(4002);
 		Button optimizeLineupButton = (Button)findViewById(4003);
 		
-		LinearLayout.LayoutParams projectPerformanceParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, 0, 10);
+		LinearLayout.LayoutParams projectPerformanceParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 10);
 		LinearLayout.LayoutParams projectionButtonsDividerParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, 0, 1);
+		
+		projectPerformanceParams.gravity = Gravity.CENTER_HORIZONTAL;
+		
 		projectPerformanceButton.setLayoutParams(projectPerformanceParams);
 		projectionButtonsDivider.setLayoutParams(projectionButtonsDividerParams);
 		optimizeLineupButton.setLayoutParams(projectPerformanceParams);

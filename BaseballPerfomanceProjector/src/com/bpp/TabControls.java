@@ -35,8 +35,6 @@ public class TabControls extends LinearLayout {
 		
 		setVerticalOrientation();
 		selectBatters();
-		setBatterOnClick(context);
-		setPitcherOnClick(context);
 	}
 	
 	public LinearLayout getBatterContainer(Context context) {
@@ -186,7 +184,6 @@ public class TabControls extends LinearLayout {
 		LinearLayout bufferLayout = (LinearLayout)this.findViewById(4000);
 		LinearLayout.LayoutParams bufferParams = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 1);
 		bufferLayout.setLayoutParams(bufferParams);
-		//maximizeTextSize(currentDate);
 	}
 	
 	public void setHorizontalOrientation() {
@@ -250,7 +247,6 @@ public class TabControls extends LinearLayout {
 		LinearLayout bufferLayout = (LinearLayout)this.findViewById(4000);
 		LinearLayout.LayoutParams bufferParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
 		bufferLayout.setLayoutParams(bufferParams);
-		//maximizeTextSize(currentDate);
 	}
 	
 	public void maximizeTextSize(TextView textView) {
@@ -267,39 +263,29 @@ public class TabControls extends LinearLayout {
     	}
     }
 	
-	public void setAddPlayerListener(View.OnClickListener onClickListener) {
-		Button addPlayerButton = (Button)this.findViewById(1001);
-		addPlayerButton.setOnClickListener(onClickListener);
-	}
-	
-	public void setAddPlayerClickable(boolean isClickable) {
-		Button addPlayerButton = (Button)this.findViewById(1001);
-		addPlayerButton.setClickable(isClickable);
-	}
-	
-	public void setBatterOnClick(Context context) {
+	public void setBatterOnClick(Context context, final LinearLayout showView, final LinearLayout hideView) {
 		LinearLayout batterLayout = (LinearLayout)this.findViewById(1000);
 		
 		batterLayout.setOnClickListener(new View.OnClickListener()
         {
         	public void onClick(View v) 
         	{ 	
-        		//findViewById(R.id.battersTab).setVisibility(View.VISIBLE);
-        		//findViewById(R.id.pitchersTab).setVisibility(View.GONE);
+        		showView.setVisibility(View.VISIBLE);
+        		hideView.setVisibility(View.GONE);
         		selectBatters();
        		}
         });
 	}
 	
-	public void setPitcherOnClick(Context context) {
+	public void setPitcherOnClick(Context context, final LinearLayout showView, final LinearLayout hideView) {
 		LinearLayout pitcherLayout = (LinearLayout)this.findViewById(3000);
 		
 		pitcherLayout.setOnClickListener(new View.OnClickListener()
         {
         	public void onClick(View v) 
         	{ 	
-        		//findViewById(R.id.pitchersTab).setVisibility(View.VISIBLE);
-        		//findViewById(R.id.battersTab).setVisibility(View.GONE);
+        		showView.setVisibility(View.VISIBLE);
+        		hideView.setVisibility(View.GONE);
         		selectPitchers();
        		}
         });

@@ -2,6 +2,7 @@ package com.bpp;
 
 import android.R.color;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -62,9 +63,13 @@ public class PlayerView extends LinearLayout {
 	
 	public void addHeader(Context context, String header, RelativeLayout relativeLayout) {
 		TextView textView = new TextView(context);
+		final float scale = getContext().getResources().getDisplayMetrics().density;
+		int indentDP = (int) (3 * scale + 0.5f);
 
 		textView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		textView.setText(header);
+		textView.setPadding(indentDP, 0, 0, 0);
+		textView.setTypeface(null,Typeface.BOLD);
 		
 		relativeLayout.addView(textView);
 	}

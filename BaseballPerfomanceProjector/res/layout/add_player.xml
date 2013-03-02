@@ -27,7 +27,7 @@
         <AutoCompleteTextView
             android:id="@+id/players_list"
             android:dropDownHeight="250dip"
-            android:inputType="textVisiblePassword"
+            android:inputType="textNoSuggestions"
             android:padding="5dip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

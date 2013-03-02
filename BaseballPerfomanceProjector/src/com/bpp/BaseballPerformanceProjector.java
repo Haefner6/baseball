@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.database.SQLException;
@@ -29,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -68,6 +70,7 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
         addUserPlayers(); 
         
         setInterfaceFeatures();
+        initializeTabs();
     }
     
     
@@ -335,6 +338,15 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
     	}
     }
     
+    public void initializeTabs() {
+    	TabControls tabControls = (TabControls)findViewById(R.id.tabControls);
+    	LinearLayout battersTab = (LinearLayout)findViewById(R.id.battersTab);
+    	LinearLayout pitchersTab = (LinearLayout)findViewById(R.id.pitchersTab);
+    	
+    	tabControls.setBatterOnClick(this, battersTab, pitchersTab);
+    	tabControls.setPitcherOnClick(this, pitchersTab, battersTab);
+    }
+    
     public void modifyPlayerDialog(final Player player) {
     	LayoutInflater inflater = LayoutInflater.from(this);
     	final View modifyPlayerView = inflater.inflate(R.layout.modify_player, null);
@@ -462,6 +474,7 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
     	LayoutInflater inflater = LayoutInflater.from(this);
     	PlayersDatabaseHelper playersDatabase = new PlayersDatabaseHelper(this);
     	List<Player> addablePlayersList = playersDatabase.getAllPlayers();
+    	playersDatabase.close();
     	final View add_player = inflater.inflate(R.layout.add_player, null);
     	TextView title = (TextView)add_player.findViewById(R.id.title);
     	final TextView chosenPlayer = (TextView)add_player.findViewById(R.id.chosenPlayer);
@@ -476,11 +489,17 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
     		playerSummaries[i] = addablePlayersArray[i].getPlayerSummary();
     	}
 	 	final Player selectedPlayer = new Player();
-	 	Log.println(Log.DEBUG, "myDebug", "Number of addable plaeyres: " + addablePlayersList.size());
+	 	Log.println(Log.DEBUG, "myDebug", "Number of addable players: " + addablePlayersList.size());
 	    
 	    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, playerSummaries);
         final AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView)add_player.findViewById(R.id.players_list);
         autoCompleteTextView.setAdapter(arrayAdapter);
+        
+        final InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null) {
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
+        
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view, int position,long id) {
@@ -499,9 +518,10 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
 						addablePlayersArray[playerIndex].getPosition());
 				autoCompleteTextView.setText("");
 				chosenPlayer.setText(playerSummary);
+				inputMethodManager.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(),0);
 			}
         });
-    	
+
     	Log.println(Log.DEBUG, "myDebug", "Inside addPlayerDialog()");
     	
     	AlertDialog.Builder addPlayerAlert = new AlertDialog.Builder(this);
@@ -511,6 +531,7 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
     			if(selectedPlayer.hasId()) {
     				Log.println(Log.DEBUG, "myDebug", "Should add " + selectedPlayer.getPlayerSummary());
     				addPlayer(selectedPlayer);
+    				inputMethodManager.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(),0);
     				final InterfaceControls interfaceControls = (InterfaceControls)findViewById(R.id.uiControls);
     				interfaceControls.setAddPlayerClickable(true);
     			}
@@ -520,6 +541,7 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
     		public void onClick(DialogInterface dialog, int which) {
     			final InterfaceControls interfaceControls = (InterfaceControls)findViewById(R.id.uiControls);
 				interfaceControls.setAddPlayerClickable(true);
+				inputMethodManager.hideSoftInputFromWindow(autoCompleteTextView.getWindowToken(),0);
     		}	
     	}).show();
     }
