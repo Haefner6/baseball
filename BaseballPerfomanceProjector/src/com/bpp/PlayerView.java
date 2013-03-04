@@ -2,8 +2,10 @@ package com.bpp;
 
 import android.R.color;
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -60,7 +62,7 @@ public class PlayerView extends LinearLayout {
 		this.addView(relativeLayout);
 		addHorizontalBreak(context);
 	}
-	
+
 	public void addHeader(Context context, String header, RelativeLayout relativeLayout) {
 		TextView textView = new TextView(context);
 		final float scale = getContext().getResources().getDisplayMetrics().density;
@@ -72,6 +74,37 @@ public class PlayerView extends LinearLayout {
 		textView.setTypeface(null,Typeface.BOLD);
 		
 		relativeLayout.addView(textView);
+	}
+	
+	public void fitAllTextSizes() {
+		RelativeLayout relativeLayout = (RelativeLayout)this.getChildAt(0);
+		TextView headerView = (TextView)relativeLayout.getChildAt(0);
+		TextView playerNameView = (TextView)relativeLayout.getChildAt(1);
+		
+		fitTextSize(headerView);
+		fitTextSize(playerNameView);
+	}
+	 
+	public void fitTextSize(TextView textView) {
+		String text = textView.getText().toString();
+		
+		
+    	int textViewWidth = textView.getWidth();
+    	float textSize = textView.getTextSize();
+    	Paint paint = textView.getPaint();
+
+    	if (paint.measureText(text, 0, text.length()) < textViewWidth) {
+    		return;
+    	}
+    	
+	    for (float i = textSize; i > 8; i--) {
+	    	textView.setTextSize(i);
+	   	    if (paint.measureText(text, 0, text.length()) < textViewWidth) {
+	   	    	textView.setTextSize(i);
+	   	        break; 
+	    	}
+	    }
+    	
 	}
 	
 	public void addPlayerName(Context context, RelativeLayout relativeLayout) {

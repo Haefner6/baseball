@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -208,6 +209,7 @@ public class TabControls extends LinearLayout {
 		batter.setText("B\nA\nT\nT\nE\nR\nS");
 		batter.setTypeface(null,Typeface.BOLD);
 		batter.setGravity(Gravity.CENTER);
+		batter.setLineSpacing(0, (float) 0.8);
 
 		// BatterSelected
 		TextView batterSelected = (TextView)this.findViewById(1002);
@@ -225,6 +227,9 @@ public class TabControls extends LinearLayout {
 		pitcher.setText("P\nI\nT\nC\nH\nE\nR\nS");
 		pitcher.setTypeface(null,Typeface.BOLD);
 		pitcher.setGravity(Gravity.CENTER);
+		pitcher.setLineSpacing(0, (float) 0.8);
+		
+		//Log.println(Log.DEBUG, "myDebug", "Header Width: "); 
 		
 		// Divider Layout
 		LinearLayout dividerLayout = (LinearLayout)this.findViewById(2000);
