@@ -1,11 +1,14 @@
 package com.bpp;
 
+import java.util.Calendar;
+
 import android.R.color;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -270,5 +273,77 @@ public class InterfaceControls extends LinearLayout {
 	public void setProjectPerformanceClickable(boolean isClickable) {
 		Button projectPerformanceButton = (Button)this.findViewById(4001);
 		projectPerformanceButton.setClickable(isClickable);
+	}
+	
+	public void setPreviousDateClickable(boolean isClickable) {
+		Button previousDateButton = (Button)this.findViewById(3001);
+		previousDateButton.setClickable(isClickable);
+	}
+	
+	public void setNextDateClickable(boolean isClickable) {
+		Button nextDateButton = (Button)this.findViewById(3003);
+		nextDateButton.setClickable(isClickable);
+	}
+	
+	public void setPreviousDateClickListener() {
+		Button previousDateButton = (Button)this.findViewById(3001);
+		previousDateButton.setOnClickListener(new View.OnClickListener()
+        {
+        	public void onClick(View v) 
+        	{ 	
+        		previousDate();
+       		}
+        });
+	}
+	
+	public void setNextDateClickListener() {
+		Button previousDateButton = (Button)this.findViewById(3003);
+		previousDateButton.setOnClickListener(new View.OnClickListener()
+        {
+        	public void onClick(View v) 
+        	{ 	
+        		nextDate();
+       		}
+        });
+	}
+	
+	public void setDate(Calendar calendar) {
+		int month = calendar.get(Calendar.MONTH);
+		int day = calendar.get(Calendar.DAY_OF_MONTH);
+		TextView currentDate = (TextView)this.findViewById(3002);
+		
+		if(month < 3) {
+			month = 2;
+			day = 31;
+		} else if(month > 8) {
+			month = 8;
+			day = 30;
+		}
+		month++;
+		currentDate.setText(month + "/" + day);
+	} 
+	
+	public void previousDate() {
+		TextView currentDate = (TextView)this.findViewById(3002);
+		String dateString = currentDate.getText().toString();
+		int month = Integer.parseInt(dateString.substring(0, dateString.indexOf("/")));
+		int day = Integer.parseInt(dateString.substring(dateString.indexOf("/") + 1, dateString.length()));
+		Calendar calendar = Calendar.getInstance();
+		
+		calendar.set(2013, month -1, day);
+		calendar.add(calendar.DAY_OF_YEAR, -1);
+		setDate(calendar);
+	}
+	
+	public void nextDate() {
+		TextView currentDate = (TextView)this.findViewById(3002);
+		String dateString = currentDate.getText().toString();
+		int month = Integer.parseInt(dateString.substring(0, dateString.indexOf("/")));
+		int day = Integer.parseInt(dateString.substring(dateString.indexOf("/") + 1, dateString.length()));
+		Calendar calendar = Calendar.getInstance();
+		
+		calendar.set(2013, month -1, day);
+		calendar.add(calendar.DAY_OF_YEAR, 1);
+		setDate(calendar);
 	}
 }

@@ -3,6 +3,7 @@ package com.bpp;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
@@ -47,7 +48,6 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
 
 	ArrayList<Player> playersArrayList;
 	ArrayList<String>positionList;
-	String[] activePlayers;
 	
     /** Called when the activity is first created. */
     @Override
@@ -55,13 +55,10 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        
         loadPlayersDatabase();
         
         playersArrayList = new ArrayList<Player>();
         positionList = new ArrayList<String>();
-        
-        activePlayers = new String[9];
 
         syncStatsScrollWithHeader();
         
@@ -141,6 +138,11 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
     
     public void setInterfaceFeatures() {
     	final InterfaceControls interfaceControls = (InterfaceControls)findViewById(R.id.uiControls);
+    	// Eventually will check user's last day
+    	Calendar calendar = Calendar.getInstance();
+    	interfaceControls.setDate(calendar);
+    	interfaceControls.setPreviousDateClickListener();
+    	interfaceControls.setNextDateClickListener();
     	interfaceControls.setAddPlayerListener(new View.OnClickListener()
         {
         	public void onClick(View v) 
@@ -243,7 +245,6 @@ public class BaseballPerformanceProjector extends Activity implements Horizontal
        List<Player> userPlayerList = databaseHandler.getAllUserPlayers();
 
        for (int i = 0; i < userPlayerList.size(); i++) {
-    	   //Log.println(Log.DEBUG, "myDebug", "Adding " + userPlayerList.get(i).getPlayerFullName() + " " + userPlayerList.get(i).getPosition());
     	   addPlayer(userPlayerList.get(i));
        } // end for loop
        databaseHandler.close();
