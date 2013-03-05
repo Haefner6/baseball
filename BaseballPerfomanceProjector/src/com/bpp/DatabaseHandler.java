@@ -120,6 +120,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     	db.close();
     }
     
+    /*
+    
     // Add new batterStat
     public void addBatter(BatterStats batterStats) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -146,6 +148,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.insert(TABLE_BATTERS, null, values);
         db.close(); // Closing database connection
     }
+    
+    */
     
     public Player getBatter(String id) {
         SQLiteDatabase db = this.getReadableDatabase();

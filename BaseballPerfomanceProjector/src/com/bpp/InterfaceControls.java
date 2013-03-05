@@ -346,4 +346,11 @@ public class InterfaceControls extends LinearLayout {
 		calendar.add(calendar.DAY_OF_YEAR, 1);
 		setDate(calendar);
 	}
+	
+	public String getDate() {
+		TextView currentDate = (TextView)this.findViewById(3002);
+		String dateString = currentDate.getText().toString() + "/2013";
+		
+		return dateString;
+	}
 }

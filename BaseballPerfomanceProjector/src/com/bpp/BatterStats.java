@@ -3,20 +3,20 @@ package com.bpp;
 public class BatterStats {
 	private String playerId;
 	private String date;
-	private String lastName;
-	private String firstName;
-	private String batHand;
-	private String throwHand;
-	private String position;
+	private String homeRuns;
+	private String runs;
+	private String rbi;
+	private String netSteals;
+	private String onBasePercentage;
 	
-	public BatterStats(String playerId, String date, String lastName, String firstName, String batHand, String throwHand, String position) {
+	public BatterStats(String playerId, String date, String homeRuns, String runs, String rbi, String netSteals, String onBasePercentage) {
 		this.playerId = playerId;
 		this.date = date;
-		this.lastName = lastName;
-		this.firstName = firstName;
-		this.batHand = batHand;
-		this.throwHand = throwHand;
-		this.position = position;
+		this.homeRuns = homeRuns;
+		this.runs = runs;
+		this.rbi = rbi;
+		this.netSteals = netSteals;
+		this.onBasePercentage = onBasePercentage;
 	}
 	
 	public boolean equals(Player player) {
@@ -34,27 +34,23 @@ public class BatterStats {
 		return date;
 	}
 	
-	public String getLastName() {
-		return lastName;
+	public String getHomeRuns() {
+		return homeRuns;
 	}
 	
-	public String getFirstName() {
-		return firstName;
+	public String getRuns() {
+		return runs;
 	}
 	
-	public String getBatHand() {
-		return batHand;
+	public String getRbi() {
+		return rbi;
 	}
 	
-	public String getThrowHand() {
-		return throwHand;
+	public String getNetSteals() {
+		return netSteals;
 	}
 	
-	public String getPosition() {
-		return position;
-	}
-	
-	public String getPlayerFullName() {
-		return firstName + " " + lastName;
+	public String getOBP() {
+		return onBasePercentage;
 	}
 }

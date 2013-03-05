@@ -621,12 +621,13 @@ public class BaseballPerformanceProjector extends Activity implements
 	}
 
 	public void makeDailyProjections() {
+		InterfaceControls interfaceControls = (InterfaceControls) findViewById(R.id.uiControls);
+		String dateAndPlayerIds[] = new String[playersArrayList.size() + 1];
+		dateAndPlayerIds[0] = interfaceControls.getDate();
 		for (int i = 0; i < playersArrayList.size(); i++) {
-			// sendContent(playersArrayList.get(i).getPlayerId());
-			String playerIds[] = new String[1];
-			playerIds[0] = playersArrayList.get(i).getPlayerId();
-			new WebServiceCall().execute(playerIds);
+			dateAndPlayerIds[i + 1] = playersArrayList.get(i).getPlayerId();
 		}
+		new WebServiceCall().execute(dateAndPlayerIds);
 	} // End makeDailyProjections()
 
 	public int getIndexOfPlayerId(String playerId) {
@@ -644,81 +645,116 @@ public class BaseballPerformanceProjector extends Activity implements
 		return 0; // This should never be reached
 	}
 
-	private class WebServiceCall extends AsyncTask<String, Void, String[]> {
+	private class WebServiceCall extends AsyncTask<String, Void, BatterStats[]> {
 		@Override
-		protected String[] doInBackground(String... playerId) {
+		protected void onPreExecute() {
+			InterfaceControls interfaceControls = (InterfaceControls) findViewById(R.id.uiControls);
+			interfaceControls.setProjectPerformanceClickable(false);
+	    }
+		
+		@Override
+		protected BatterStats[] doInBackground(String... dateAndPlayerIds) {
 			String url = "http://threemuskets.com/BaseballApp/getBatterProjection.php";
 			// Log.println(Log.DEBUG, "myDebug", url);
 			String response = "ERROR";
 			HttpPost httppost;
 			HttpClient client;
+			String playerIdsString = "";
+			String date = "";
 			List<NameValuePair> nameValuePairs;
 			try {
 				client = new DefaultHttpClient();
 				httppost = new HttpPost(url);
+				date = dateAndPlayerIds[0];
+				for(int i=1; i< dateAndPlayerIds.length; i++) {
+					if(i !=1) {
+						playerIdsString = playerIdsString + ",";
+					}
+					playerIdsString = playerIdsString + dateAndPlayerIds[i];
+				}
+				Log.println(Log.DEBUG, "myDebug", "Date: " + date);
+				Log.println(Log.DEBUG, "myDebug", "Sending: " + playerIdsString);
 				// Add your data
 				nameValuePairs = new ArrayList<NameValuePair>(2);
-				nameValuePairs
-						.add(new BasicNameValuePair("player", playerId[0]));
-				nameValuePairs.add(new BasicNameValuePair("date", "3/31/2013"));
+				nameValuePairs.add(new BasicNameValuePair("players", playerIdsString));
+				nameValuePairs.add(new BasicNameValuePair("date", dateAndPlayerIds[0]));
 				httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 				// Execute HTTP Post Request
 				ResponseHandler<String> responseHandler = new BasicResponseHandler();
 				response = client.execute(httppost, responseHandler);
 			} catch (Exception e) {
-				// Toast.makeText(this, "error" + e.toString(),
-				// Toast.LENGTH_LONG).show();
 				Log.println(Log.DEBUG, "myDebug", "error" + e.toString());
+				return null;
 			}
-			Log.println(Log.DEBUG, "myDebug", "Response for " + playerId[0]
-					+ ": " + response);
-			String[] statsResults = parseResponse(response);
-			return statsResults;
+			Log.println(Log.DEBUG, "myDebug", "Response: " + response);
+			BatterStats[] batterStats = parseResponse(response, date);
+			return batterStats;
 		}
 
 		@Override
-		protected void onPostExecute(String[] response) {
-			String[] statsResults = new String[0];
-			if (response.length > 0) {
-				statsResults = new String[response.length - 1];
-				for (int i = 0; i < statsResults.length; i++) {
-					statsResults[i] = response[i + 1];
-				}
-				changeStats(response[0], statsResults);
+		protected void onPostExecute(BatterStats[] batterStats) {
+			if(batterStats.equals(null)) {
+				// Throw a toast alerting the user to try again later.
+				return;
 			}
+			for (int i = 0; i < batterStats.length; i++) {
+				changeStats(batterStats[i]);
+			}
+			InterfaceControls interfaceControls = (InterfaceControls) findViewById(R.id.uiControls);
+			interfaceControls.setProjectPerformanceClickable(true);
 		}
 
-		public void changeStats(String playerId, String[] statsResults) {
+		public void changeStats(BatterStats batterStats) {
 			// Log.println(Log.DEBUG, "myDebug",
 			// "Calling getIndexOfPlayer with: " + playerId);
-			int index = getIndexOfPlayerId(playerId);
+			int index = getIndexOfPlayerId(batterStats.getPlayerId());
 			// Log.println(Log.DEBUG, "myDebug", "PlayerId index: " + index);
 			LinearLayout statsListLayout = (LinearLayout) findViewById(R.id.statsListLayout);
 			StatsView statsView = (StatsView) statsListLayout.getChildAt(index);
+			
+			String[] statsResults = new String[5];
+			statsResults[0] = batterStats.getHomeRuns();
+			statsResults[1] = batterStats.getRuns();
+			statsResults[2] = batterStats.getRbi();
+			statsResults[3] = batterStats.getNetSteals();
+			statsResults[4] = batterStats.getOBP();
+			
 			statsView.setStats(statsResults);
 		}
 
-		public String[] parseResponse(String response) {
-			int numStats = countOccurrences(response, ',') + 1;
-			// Log.println(Log.DEBUG, "myDebug", "Response is: " + response);
-			String[] statsResults = new String[numStats];
-			for (int i = 0; i < numStats; i++) {
-				String stat = "";
-				if (response.contains(",")) {
-					stat = response.substring(0, response.indexOf(","));
-				} else {
-					stat = response;
-				}
-				if ((stat.length() > 4) && (i != 0)) {
-					stat = stat.substring(0, 5);
-				}
-				// Log.println(Log.DEBUG, "myDebug", "Adding " + stat +
-				// " to statsResults");
-				response = response.substring(response.indexOf(",") + 1,
-						response.length());
-				statsResults[i] = stat;
+		public BatterStats[] parseResponse(String response, String date) {
+			int numPlayers = countOccurrences(response, '*');
+			Log.println(Log.DEBUG, "myDebug", "Parsing: " + response);
+			BatterStats[] batterStats = new BatterStats[numPlayers];
+			for (int i = 0; i < numPlayers; i++) {
+				String playerId;
+				String homeRuns;
+				String runs;
+				String rbi;
+				String netSteals;
+				String obp;
+				
+				playerId = response.substring(0, response.indexOf(","));
+				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus playerId
+				
+				homeRuns = response.substring(0, response.indexOf(","));
+				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus homeRuns
+				
+				runs = response.substring(0, response.indexOf(","));
+				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus runs
+				
+				rbi = response.substring(0, response.indexOf(","));
+				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus rbi
+				
+				netSteals = response.substring(0, response.indexOf(","));
+				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus netSteals
+				
+				obp = response.substring(0, response.indexOf("*"));
+				response = response.substring(response.indexOf("*") + 1, response.length()); // Line minus obp
+				
+				batterStats[i] = new BatterStats(playerId, date, homeRuns, runs, rbi, netSteals, obp);
 			}
-			return statsResults;
+			return batterStats;
 		}
 
 		public int countOccurrences(String word, char searchTerm) {
