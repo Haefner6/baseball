@@ -70,7 +70,7 @@ public class BaseballPerformanceProjector extends Activity implements
 		setInterfaceFeatures();
 		initializeTabs();
 	}
-
+ 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		// TODO Auto-generated method stub
@@ -123,7 +123,6 @@ public class BaseballPerformanceProjector extends Activity implements
 			dividerLine.setLayoutParams(new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, dividerWidth));
 			interfaceControls.setLayoutParams(uiControlsParams);
-
 			interfaceControls.setVerticalOrientation();
 		} else {
 			appLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -147,7 +146,6 @@ public class BaseballPerformanceProjector extends Activity implements
 			dividerLine.setLayoutParams(new LinearLayout.LayoutParams(
 					dividerWidth, LayoutParams.MATCH_PARENT));
 			interfaceControls.setLayoutParams(uiControlsParams);
-
 			interfaceControls.setHorizontalOrientation();
 		}
 	}
@@ -161,7 +159,6 @@ public class BaseballPerformanceProjector extends Activity implements
 			playerView = (PlayerView) playersListLayout.getChildAt(i);
 			playerView.fitAllTextSizes();
 		}
-
 	}
 
 	public void setInterfaceFeatures() {
@@ -463,8 +460,7 @@ public class BaseballPerformanceProjector extends Activity implements
 						try {
 							removePlayer(player);
 						} catch (Exception e) {
-							Log.println(Log.DEBUG, "myDebug",
-									"Caught exception in modifyPlayerDialog()");
+							Log.println(Log.DEBUG, "myDebug","Caught exception in modifyPlayerDialog()");
 							return;
 						}
 					}

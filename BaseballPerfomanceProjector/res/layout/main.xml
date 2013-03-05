@@ -32,7 +32,7 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical" >
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="20dp"
                     android:background="@android:color/white"
@@ -40,21 +40,24 @@
                     android:orientation="horizontal" >
 
                     <TextView
-                        android:layout_width="0px"
+                        android:id="@+id/lineupLabel"
+                        android:layout_width="150dip"
                         android:layout_height="match_parent"
-                        android:layout_weight="4"
+                        android:layout_alignParentLeft="true"
                         android:text="@string/lineup" />
 
                     <FrameLayout
+                        android:id="@+id/labelDivider"
                         android:layout_width="5dp"
                         android:layout_height="match_parent"
+                        android:layout_toRightOf="@+id/lineupLabel"
                         android:background="@android:color/black" />
 
                     <HorizontalScrollView
                         android:id="@+id/statsHeaderScrollView"
-                        android:layout_width="0px"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="7" >
+                        android:layout_toRightOf="@+id/labelDivider" >
 
                         <LinearLayout
                             android:id="@+id/viewableStatsHeader"
@@ -118,24 +121,24 @@
                                 android:background="@android:color/black" />
                         </LinearLayout>
                     </HorizontalScrollView>
-                </LinearLayout>
+                </RelativeLayout>
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@android:color/black" />
 
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:orientation="horizontal" >
 
                     <com.bpp.TrackableScrollView
                         android:id="@+id/playerListScrollView"
-                        android:layout_width="0px"
+                        android:layout_width="150dip"
                         android:layout_height="match_parent"
-                        android:layout_weight="4"
+                        android:layout_alignParentLeft="true"
                         android:background="@android:color/white"
                         android:orientation="vertical" >
 
@@ -147,15 +150,17 @@
                     </com.bpp.TrackableScrollView>
 
                     <FrameLayout
-                        android:layout_width="5dp"
+                        android:id="@+id/playersStatsDivider"
+                        android:layout_width="5dip"
                         android:layout_height="match_parent"
+                        android:layout_toRightOf="@+id/playerListScrollView"
                         android:background="@android:color/black" />
 
                     <com.bpp.TrackableScrollView
                         android:id="@+id/statsScrollViewWrapper"
-                        android:layout_width="0px"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="7"
+                        android:layout_toRightOf="@+id/playersStatsDivider"
                         android:background="@android:color/white"
                         android:orientation="vertical" >
 
@@ -173,7 +178,7 @@
                                 android:orientation="vertical" />
                         </com.bpp.TrackableHorizontalScrollView>
                     </com.bpp.TrackableScrollView>
-                </LinearLayout>
+                </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -203,6 +208,8 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="2"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="horizontal" >
     </com.bpp.InterfaceControls>
 
