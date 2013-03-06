@@ -270,6 +270,11 @@ public class InterfaceControls extends LinearLayout {
 		projectPerformanceButton.setOnClickListener(onClickListener);
 	}
 	
+	public void setSettingsClickListener(View.OnClickListener onClickListener) {
+		Button settingsButton = (Button)this.findViewById(1002);
+		settingsButton.setOnClickListener(onClickListener);
+	}
+	
 	public void setProjectPerformanceClickable(boolean isClickable) {
 		Button projectPerformanceButton = (Button)this.findViewById(4001);
 		projectPerformanceButton.setClickable(isClickable);
@@ -306,7 +311,7 @@ public class InterfaceControls extends LinearLayout {
        		}
         });
 	}
-	
+
 	public void setDate(Calendar calendar) {
 		int month = calendar.get(Calendar.MONTH);
 		int day = calendar.get(Calendar.DAY_OF_MONTH);

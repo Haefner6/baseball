@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.database.SQLException;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 import android.view.Gravity;
@@ -40,6 +41,7 @@ import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
@@ -174,12 +176,16 @@ public class BaseballPerformanceProjector extends Activity implements
 				addPlayerDialog();
 			}
 		});
-		interfaceControls
-				.setProjectPerformanceListener(new View.OnClickListener() {
-					public void onClick(View v) {
-						makeDailyProjections();
-					}
-				});
+		interfaceControls.setProjectPerformanceListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				makeDailyProjections();
+			}
+		});
+		interfaceControls.setSettingsClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				settingsDialog();
+			}
+		});
 	}
 
 	public void loadPlayersDatabase() {
@@ -606,6 +612,59 @@ public class BaseballPerformanceProjector extends Activity implements
 								autoCompleteTextView.getWindowToken(), 0);
 					}
 				}).show();
+	}
+	
+	private void settingsDialog() {
+		LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+		final View settings_layout = inflater.inflate(R.layout.settings, null);
+		AlertDialog.Builder settingsAlert = new AlertDialog.Builder(this);
+		
+		final RelativeLayout editLeaguePositionsLayout = (RelativeLayout)settings_layout.findViewById(R.id.editLeaguePositionsLayout);
+		final TextView editLeaguePositionsLabel = (TextView)settings_layout.findViewById(R.id.editLeaguePositionsLabel);
+		final TextView editLeaguePositionsExtraLabel = (TextView)settings_layout.findViewById(R.id.editLeaguePositionsExtraLabel);
+		final LinearLayout positionsLayout = (LinearLayout)settings_layout.findViewById(R.id.positionsLayout);
+		
+		final RelativeLayout editScoringLayout = (RelativeLayout)settings_layout.findViewById(R.id.editScoringLayout);
+		final LinearLayout scoringLayout = (LinearLayout)settings_layout.findViewById(R.id.scoringLayout);
+		final TextView editScoringLabel = (TextView)settings_layout.findViewById(R.id.editScoringLabel) ;
+		final TextView editScoringExtraLabel = (TextView)settings_layout.findViewById(R.id.editScoringExtraLabel);
+		
+		editLeaguePositionsLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(positionsLayout.getVisibility() == View.GONE) {
+					editLeaguePositionsLayout.setBackgroundColor(Color.YELLOW);
+					editLeaguePositionsLabel.setTextColor(Color.BLACK);
+					editLeaguePositionsExtraLabel.setTextColor(Color.BLACK);
+					positionsLayout.setVisibility(View.VISIBLE);
+				} else {
+					editLeaguePositionsLayout.setBackgroundColor(Color.BLACK);
+					editLeaguePositionsLabel.setTextColor(Color.WHITE);
+					editLeaguePositionsExtraLabel.setTextColor(Color.WHITE);
+					positionsLayout.setVisibility(View.GONE);
+				}
+			}  
+		});
+		
+		editScoringLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(scoringLayout.getVisibility() == View.GONE) {
+					editScoringLayout.setBackgroundColor(Color.YELLOW);
+					editScoringLabel.setTextColor(Color.BLACK);
+					editScoringExtraLabel.setTextColor(Color.BLACK);
+					scoringLayout.setVisibility(View.VISIBLE);
+				} else {
+					editScoringLayout.setBackgroundColor(Color.BLACK);
+					editScoringLabel.setTextColor(Color.WHITE);
+					editScoringExtraLabel.setTextColor(Color.WHITE);
+					scoringLayout.setVisibility(View.GONE);
+				}
+			}
+		});
+		
+		settingsAlert.setView(settings_layout);
+		settingsAlert.show();
 	}
 
 	public boolean hasBenchPlayer() {

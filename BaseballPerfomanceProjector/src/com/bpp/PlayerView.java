@@ -14,13 +14,10 @@ public class PlayerView extends LinearLayout {
 	private String playerId;
 	private String playerName;
 	private String position;
-	private Context context;
-	private int currentWidth;
 	private float DEFAULT_TEXT_SIZE = 14;
 	
 	public PlayerView(Context context, String playerId, String playerName, String position) {
 		super(context);
-		this.context = context;
 		float scale = getContext().getResources().getDisplayMetrics().density;
 		int heightDP = (int) (41 * scale + 0.5f);
 		this.setOrientation(VERTICAL);
@@ -40,7 +37,6 @@ public class PlayerView extends LinearLayout {
 		addPlayerName(context, relativeLayout);
 		this.addView(relativeLayout);
 		addHorizontalBreak(context);
-		this.currentWidth = this.getWidth();
 	}
 
 	public void addHeader(Context context, String header, RelativeLayout relativeLayout) {
@@ -126,10 +122,6 @@ public class PlayerView extends LinearLayout {
 	
 	public String getPosition() {
 		return position;
-	}
-	
-	public void setCurrentWidth() {
-		this.currentWidth = this.getWidth();
 	}
 	
 	public void setPlayerId(String playerId) {

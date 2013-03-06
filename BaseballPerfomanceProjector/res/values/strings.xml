@@ -10,9 +10,14 @@
     <string name="secondBasePosHeading"><u><b>2B</b></u></string>
     <string name="SSPosHeading"><u><b>SS</b></u></string>
     <string name="thirdBasePosHeading"><u><b>3B</b></u></string>
+    <string name="middleInfieldPosHeading"><u><b>2B/SS</b></u></string>
+    <string name="cornerInfieldPosHeading"><u><b>1B/3B</b></u></string>
     <string name="OFPosHeading"><u><b>OF</b></u></string>
     <string name="DHPosHeading"><u><b>DH</b></u></string>
     <string name="utilPosHeading"><u><b>UT</b></u></string>
+    <string name="pitcherPosHeading"><u><b>P</b></u></string>
+    <string name="startingPitcherPosHeading"><u><b>SP</b></u></string>
+    <string name="reliefPitcherPosHeading"><u><b>RP</b></u></string>
     <string name="benchPosHeading"><u><b>Bench</b></u></string>
     <string name="lineup">Lineup</string>
     <string name="add">Add</string>
@@ -20,16 +25,42 @@
     <string name="previousDate">&lt;</string>
     <string name="nextDate">></string>
     
+    <string name="hit_stat"><b>H</b></string>
+    <string name="BB_stat"><b>BB</b></string>
     <string name="HR_stat"><b>HR</b></string>
     <string name="run_stat"><b>R</b></string>
     <string name="RBI_stat"><b>RBI</b></string>
     <string name="SB_stat"><b>SB</b></string>
+    <string name="NSB_stat"><b>NSB</b></string>
+    <string name="K_stat"><b>K</b></string>
     <string name="OBP_stat"><b>OBP</b></string>
+    <string name="OPS_stat"><b>OPS</b></string>
+    
+    <string name="hit_stat_long"><b>Hits</b></string>
+    <string name="BB_stat_long"><b>Walks</b></string>
+    <string name="HR_stat_long"><b>Home Runs</b></string>
+    <string name="run_stat_long"><b>Runs</b></string>
+    <string name="RBI_stat_long"><b>Runs Batted In</b></string>
+    <string name="SB_stat_long"><b>Steals</b></string>
+    <string name="NSB_stat_long"><b>Net Steals</b></string>
+    <string name="K_stat_long"><b>Strikeouts</b></string>
+    <string name="OBP_stat_long"><b>On Base Percentage</b></string>
+    <string name="OPS_stat_long"><b>On Base Plus Slugging</b></string>
     
     <string name="no_player">--</string>
     <string name="no_stat">-</string>
     <string name="project_performance">Project\nPerformance</string>
     <string name="optimize_lineup">Optimize\nLineup</string>
     
-
+    <string name="settings_default_team">Set Default Team</string>
+    <string name="settings_default_team_extra">View this team when app is opened</string>
+    
+	<string name="settings_roster">Edit Roster Positions</string>
+    <string name="settings_roster_extra">Change this league\'s starting roster</string>
+    
+    <string name="settings_scoring">Edit Scoring Categories</string>
+    <string name="settings_scoring_extra">Change this league\'s counted stats</string>
+    
+    <string name="settings_main">Main Menu</string>
+    <string name="settings_main_extra">Return to home screen</string>
 </resources>

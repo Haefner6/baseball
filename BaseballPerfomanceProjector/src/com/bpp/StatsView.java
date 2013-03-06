@@ -11,22 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class StatsView extends LinearLayout {
-
-	public StatsView(Context context, AttributeSet attrs) 
-	{
-		super(context, attrs);
-		this.setOrientation(VERTICAL);
-		
-		LinearLayout linearLayout = new LinearLayout(context);
-		linearLayout.setOrientation(HORIZONTAL);
-		final float scale = getContext().getResources().getDisplayMetrics().density;
-		int heightDP = (int) (40 * scale + 0.5f);
-		linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,heightDP));
-		//this.setBackgroundColor(color.background_light);
-		
-		fillViews(context, linearLayout);
-	}
-	
 	public StatsView(Context context, String[] statsList) {
 		super(context);
 		float scale = getContext().getResources().getDisplayMetrics().density;

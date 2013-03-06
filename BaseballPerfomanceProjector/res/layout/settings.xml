@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#000000"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="400dip"
+        android:layout_weight="100"
+        android:background="#000000"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#000000"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:id="@+id/makeDefaultTeamLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:id="@+id/makeDefaultTeamInnerLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="5dip" >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="8dip"
+                        android:text="@string/settings_default_team"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dip"
+                        android:typeface="serif" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="8dip"
+                        android:text="@string/settings_default_team_extra"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14dip"
+                        android:typeface="serif" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/makeDefaultTeamCheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/makeDefaultTeamInnerLayout"
+                    android:checked="false"
+                    android:gravity="center" />
+            </RelativeLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#2F4F4F" />
+
+            <RelativeLayout
+                android:id="@+id/editLeaguePositionsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dip" >
+
+                <TextView
+                    android:id="@+id/editLeaguePositionsLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dip"
+                    android:text="@string/settings_roster"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20dip"
+                    android:typeface="serif" />
+
+                <TextView
+                    android:id="@+id/editLeaguePositionsExtraLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editLeaguePositionsLabel"
+                    android:paddingLeft="8dip"
+                    android:text="@string/settings_roster_extra"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14dip"
+                    android:typeface="serif" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/positionsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="16dip"
+                android:paddingRight="16dip"
+                android:visibility="gone" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center_vertical"
+                        android:text="@string/catcherPosHeading"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dip"
+                        android:typeface="serif" />
+
+                    <com.bpp.NumberIncrement
+                        android:id="@+id/catcherNumber"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center_vertical"
+                        android:text="@string/firstBasePosHeading"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dip"
+                        android:typeface="serif" />
+
+                    <com.bpp.NumberIncrement
+                        android:id="@+id/firstBaseNumber"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center_vertical"
+                        android:text="@string/secondBasePosHeading"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dip"
+                        android:typeface="serif" />
+
+                    <com.bpp.NumberIncrement
+                        android:id="@+id/secondBaseNumber"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center_vertical"
+                        android:text="@string/SSPosHeading"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dip"
+                        android:typeface="serif" />
+
+                    <com.bpp.NumberIncrement
+                        android:id="@+id/ssBaseNumber"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center_vertical"
+                        android:text="@string/thirdBasePosHeading"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dip"
+                        android:typeface="serif" />
+
+                    <com.bpp.NumberIncrement
+                        android:id="@+id/thirdBaseNumber"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center_vertical"
+                        android:text="@string/middleInfieldPosHeading"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dip"
+                        android:typeface="serif" />
+
+                    <com.bpp.NumberIncrement
+                        android:id="@+id/middleInfieldNumber"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center_vertical"
+                        android:text="@string/cornerInfieldPosHeading"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dip"
+                        android:typeface="serif" />
+
+                    <com.bpp.NumberIncrement
+                        android:id="@+id/cornerInfieldNumber"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center_vertical"
+                        android:text="@string/OFPosHeading"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dip"
+                        android:typeface="serif" />
+
+                    <com.bpp.NumberIncrement
+                        android:id="@+id/outfieldNumber"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center_vertical"
+                        android:text="@string/utilPosHeading"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dip"
+                        android:typeface="serif" />
+
+                    <com.bpp.NumberIncrement
+                        android:id="@+id/utilNumber"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center_vertical"
+                        android:text="@string/pitcherPosHeading"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dip"
+                        android:typeface="serif" />
+
+                    <com.bpp.NumberIncrement
+                        android:id="@+id/pitcherNumber"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center_vertical"
+                        android:text="@string/startingPitcherPosHeading"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dip"
+                        android:typeface="serif" />
+
+                    <com.bpp.NumberIncrement
+                        android:id="@+id/startingPitcherNumber"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dip"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center_vertical"
+                        android:text="@string/reliefPitcherPosHeading"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20dip"
+                        android:typeface="serif" />
+
+                    <com.bpp.NumberIncrement
+                        android:id="@+id/reliefPitcherNumber"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#2F4F4F" />
+
+            <RelativeLayout
+                android:id="@+id/editScoringLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dip" >
+
+                <TextView
+                    android:id="@+id/editScoringLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dip"
+                    android:text="@string/settings_scoring"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20dip"
+                    android:typeface="serif" />
+
+                <TextView
+                    android:id="@+id/editScoringExtraLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editScoringLabel"
+                    android:paddingLeft="8dip"
+                    android:text="@string/settings_scoring_extra"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14dip"
+                    android:typeface="serif" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/scoringLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="16dip"
+                android:paddingRight="16dip"
+                android:visibility="gone" >
+
+                <LinearLayout
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:orientation="vertical" >
+
+                    <CheckBox
+                        android:id="@+id/checkbox_hits"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:checked="false"
+                        android:text="@string/hit_stat_long" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox_RBI"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:text="@string/RBI_stat" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox_runs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:text="@string/run_stat_long" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:orientation="vertical" >
+
+                    <CheckBox
+                        android:id="@+id/checkbox_homeRuns"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:text="@string/HR_stat_long" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox_walks"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:text="@string/BB_stat_long" />
+
+                    <CheckBox
+                        android:id="@+id/checkbox_steals"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:text="@string/SB_stat_long" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#2F4F4F" />
+
+            <RelativeLayout
+                android:id="@+id/mainMenuLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dip" >
+
+                <TextView
+                    android:id="@+id/mainMenuLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dip"
+                    android:text="@string/settings_main"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20dip"
+                    android:typeface="serif" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/mainMenuLabel"
+                    android:paddingLeft="8dip"
+                    android:text="@string/settings_main_extra"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14dip"
+                    android:typeface="serif" />
+            </RelativeLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#2F4F4F" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
