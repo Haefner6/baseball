@@ -2,6 +2,9 @@
 <resources>
 
     <string name="app_name">Baseball Performance Projector</string>
+    <string name="app_name_first">Baseball</string>
+    <string name="app_name_second">Performance</string>
+    <string name="app_name_third">Projector</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     
@@ -63,4 +66,9 @@
     
     <string name="settings_main">Main Menu</string>
     <string name="settings_main_extra">Return to home screen</string>
+    
+    <string name="home_add">Add New Team</string>
+    <string name="home_view">View Team</string>
+    <string name="home_team_name">Team Name</string>
+    <string name="home_go">Go</string>
 </resources>

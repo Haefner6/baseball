@@ -619,6 +619,9 @@ public class BaseballPerformanceProjector extends Activity implements
 		final View settings_layout = inflater.inflate(R.layout.settings, null);
 		AlertDialog.Builder settingsAlert = new AlertDialog.Builder(this);
 		
+		final RelativeLayout makeDefaultTeamLayout = (RelativeLayout)settings_layout.findViewById(R.id.makeDefaultTeamLayout);
+		final CheckBox makeDefaultTeamCheckbox = (CheckBox)settings_layout.findViewById(R.id.makeDefaultTeamCheckbox);
+		
 		final RelativeLayout editLeaguePositionsLayout = (RelativeLayout)settings_layout.findViewById(R.id.editLeaguePositionsLayout);
 		final TextView editLeaguePositionsLabel = (TextView)settings_layout.findViewById(R.id.editLeaguePositionsLabel);
 		final TextView editLeaguePositionsExtraLabel = (TextView)settings_layout.findViewById(R.id.editLeaguePositionsExtraLabel);
@@ -628,6 +631,13 @@ public class BaseballPerformanceProjector extends Activity implements
 		final LinearLayout scoringLayout = (LinearLayout)settings_layout.findViewById(R.id.scoringLayout);
 		final TextView editScoringLabel = (TextView)settings_layout.findViewById(R.id.editScoringLabel) ;
 		final TextView editScoringExtraLabel = (TextView)settings_layout.findViewById(R.id.editScoringExtraLabel);
+		
+		makeDefaultTeamLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				makeDefaultTeamCheckbox.setChecked(!makeDefaultTeamCheckbox.isChecked());
+			}  
+		});
 		
 		editLeaguePositionsLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -662,6 +672,8 @@ public class BaseballPerformanceProjector extends Activity implements
 				}
 			}
 		});
+		
+		CheckBox checkbox_homeRuns = (CheckBox)settings_layout.findViewById(R.id.checkbox_homeRuns);
 		
 		settingsAlert.setView(settings_layout);
 		settingsAlert.show();

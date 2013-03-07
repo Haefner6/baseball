@@ -59,9 +59,9 @@
                     android:id="@+id/makeDefaultTeamCheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/makeDefaultTeamInnerLayout"
-                    android:checked="false"
-                    android:gravity="center" />
+                    android:layout_alignParentRight="true"
+                    android:button="@android:drawable/btn_star"
+                    android:layout_centerVertical="true" />
             </RelativeLayout>
 
             <FrameLayout
@@ -426,7 +426,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
-                        android:checked="false"
+                        android:button="@android:drawable/btn_radio"
                         android:text="@string/hit_stat_long" />
 
                     <CheckBox
@@ -434,6 +434,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
+                        android:button="@android:drawable/btn_radio"
                         android:text="@string/RBI_stat" />
 
                     <CheckBox
@@ -441,6 +442,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
+                        android:button="@android:drawable/btn_radio"
                         android:text="@string/run_stat_long" />
                 </LinearLayout>
 
@@ -455,6 +457,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
+                        android:button="@android:drawable/btn_radio"
                         android:text="@string/HR_stat_long" />
 
                     <CheckBox
@@ -462,6 +465,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
+                        android:button="@android:drawable/btn_radio"
                         android:text="@string/BB_stat_long" />
 
                     <CheckBox
@@ -469,6 +473,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
+                        android:button="@android:drawable/btn_radio"
                         android:text="@string/SB_stat_long" />
                 </LinearLayout>
             </LinearLayout>

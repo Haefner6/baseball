@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/homeLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/baseball_bg"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingRight="5dip"
+        android:paddingTop="5dip"
+        android:paddingBottom="5dip"
+        android:gravity="right" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name_first"
+            android:textColor="#000000"
+            android:textSize="18dip"
+            android:typeface="serif" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name_second"
+            android:textColor="#000000"
+            android:textSize="18dip"
+            android:typeface="serif" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name_third"
+            android:textColor="#000000"
+            android:textSize="18dip"
+            android:typeface="serif" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="300dip"
+        android:layout_height="0dip"
+        android:layout_weight="30"
+        android:background="#000000"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#000000"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:id="@+id/addNewTeamLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dip" >
+
+                <TextView
+                    android:id="@+id/addNewTeamLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dip"
+                    android:paddingLeft="8dip"
+                    android:text="@string/home_add"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20dip"
+                    android:gravity="center_vertical"
+                    android:typeface="serif" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/newTeamLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="16dip"
+                android:paddingRight="16dip"
+                android:visibility="gone" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/home_team_name"
+                    android:textColor="#FFFFFF"
+                    android:typeface="serif" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dip"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dip"
+                    android:paddingBottom="5dip" >
+
+                    <EditText
+                        android:id="@+id/newTeamName"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="8"
+                        android:maxLength="20"
+                        android:textColor="#FFFFFF"
+                        android:gravity="center_vertical" />
+
+                    <Button
+                        android:id="@+id/addNewTeamButton"
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@drawable/bpp_button_selector"
+                        android:text="@string/home_go" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#2F4F4F" />
+
+            <RelativeLayout
+                android:id="@+id/viewTeamsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dip" >
+
+                <TextView
+                    android:id="@+id/viewTeamsLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dip"
+                    android:paddingLeft="8dip"
+                    android:text="@string/home_view"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20dip"
+                    android:gravity="center_vertical"
+                    android:typeface="serif" />
+            </RelativeLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#2F4F4F" />
+
+            <LinearLayout
+                android:id="@+id/teamsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="16dip"
+                android:paddingRight="16dip"
+                android:visibility="gone" >
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/spaceFiller"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="10" />
+
+</LinearLayout>
