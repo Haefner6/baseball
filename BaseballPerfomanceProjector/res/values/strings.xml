@@ -71,4 +71,6 @@
     <string name="home_view">View Team</string>
     <string name="home_team_name">Team Name</string>
     <string name="home_go">Go</string>
+    <string name="home_remove">Remove</string>
+    <string name="home_select">Select</string>
 </resources>

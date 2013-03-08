@@ -444,6 +444,20 @@
                         android:textColor="#FFFFFF"
                         android:button="@android:drawable/btn_radio"
                         android:text="@string/run_stat_long" />
+                    <CheckBox
+                        android:id="@+id/checkbox_strikeouts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:button="@android:drawable/btn_radio"
+                        android:text="@string/K_stat_long" />
+                    <CheckBox
+                        android:id="@+id/checkbox_obp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:button="@android:drawable/btn_radio"
+                        android:text="@string/OBP_stat_long" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -475,6 +489,20 @@
                         android:textColor="#FFFFFF"
                         android:button="@android:drawable/btn_radio"
                         android:text="@string/SB_stat_long" />
+                    <CheckBox
+                        android:id="@+id/checkbox_netSteals"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:button="@android:drawable/btn_radio"
+                        android:text="@string/NSB_stat_long" />
+                    <CheckBox
+                        android:id="@+id/checkbox_ops"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:button="@android:drawable/btn_radio"
+                        android:text="@string/OPS_stat_long" />
                 </LinearLayout>
             </LinearLayout>
 

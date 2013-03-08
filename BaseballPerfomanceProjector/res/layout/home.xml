@@ -10,11 +10,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="right"
         android:orientation="vertical"
-        android:paddingRight="5dip"
-        android:paddingTop="5dip"
         android:paddingBottom="5dip"
-        android:gravity="right" >
+        android:paddingRight="5dip"
+        android:paddingTop="5dip" >
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,11 +65,11 @@
                     android:id="@+id/addNewTeamLabel"
                     android:layout_width="match_parent"
                     android:layout_height="50dip"
+                    android:gravity="center_vertical"
                     android:paddingLeft="8dip"
                     android:text="@string/home_add"
                     android:textColor="#FFFFFF"
                     android:textSize="20dip"
-                    android:gravity="center_vertical"
                     android:typeface="serif" />
             </RelativeLayout>
 
@@ -93,17 +94,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dip"
                     android:orientation="horizontal"
-                    android:paddingTop="5dip"
-                    android:paddingBottom="5dip" >
+                    android:paddingBottom="5dip"
+                    android:paddingTop="5dip" >
 
                     <EditText
                         android:id="@+id/newTeamName"
                         android:layout_width="0dip"
                         android:layout_height="match_parent"
                         android:layout_weight="8"
+                        android:gravity="center_vertical"
                         android:maxLength="20"
-                        android:textColor="#FFFFFF"
-                        android:gravity="center_vertical" />
+                        android:textColor="#FFFFFF" />
 
                     <Button
                         android:id="@+id/addNewTeamButton"
@@ -131,11 +132,11 @@
                     android:id="@+id/viewTeamsLabel"
                     android:layout_width="match_parent"
                     android:layout_height="50dip"
+                    android:gravity="center_vertical"
                     android:paddingLeft="8dip"
                     android:text="@string/home_view"
                     android:textColor="#FFFFFF"
                     android:textSize="20dip"
-                    android:gravity="center_vertical"
                     android:typeface="serif" />
             </RelativeLayout>
 
@@ -148,10 +149,45 @@
                 android:id="@+id/teamsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:paddingLeft="16dip"
                 android:paddingRight="16dip"
                 android:visibility="gone" >
+
+                <RadioGroup
+                    android:id="@+id/radioTeams"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+                </RadioGroup>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="15dip"
+                    android:paddingLeft="10dip"
+                    android:paddingRight="10dip" >
+
+                    <Button
+                        android:id="@+id/removeTeamButton"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:background="@drawable/bpp_button_selector"
+                        android:text="@string/home_remove" />
+
+                    <TextView
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2" />
+                    <Button
+                        android:id="@+id/selectTeamButton"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:background="@drawable/bpp_button_selector"
+                        android:text="@string/home_select" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

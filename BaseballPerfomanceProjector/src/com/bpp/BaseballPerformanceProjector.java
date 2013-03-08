@@ -19,8 +19,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.SQLException;
 import android.graphics.Color;
@@ -48,7 +50,7 @@ import android.widget.TextView;
 
 public class BaseballPerformanceProjector extends Activity implements
 		HorizontalScrollViewListener, ScrollViewListener {
-
+	String league_name;
 	ArrayList<Player> playersArrayList;
 	ArrayList<String> positionList;
 
@@ -57,8 +59,12 @@ public class BaseballPerformanceProjector extends Activity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
-		loadPlayersDatabase();
+		league_name = "";
+		Bundle extras = getIntent().getExtras();
+        if(getIntent().hasExtra("league_name"))
+        {
+        	league_name = extras.getString("league_name");
+        }
 
 		playersArrayList = new ArrayList<Player>();
 		positionList = new ArrayList<String>();
@@ -188,21 +194,6 @@ public class BaseballPerformanceProjector extends Activity implements
 		});
 	}
 
-	public void loadPlayersDatabase() {
-		PlayersDatabaseHelper playersDatabase = new PlayersDatabaseHelper(this);
-		try {
-			playersDatabase.createDataBase();
-		} catch (IOException ioe) {
-			throw new Error("Unable to create database");
-		}
-		try {
-			playersDatabase.openDataBase();
-		} catch (SQLException sqle) {
-			throw sqle;
-		}
-		playersDatabase.close();
-	}
-
 	public void syncStatsScrollWithHeader() {
 		TrackableHorizontalScrollView statsScroll = (TrackableHorizontalScrollView) findViewById(R.id.statsScrollView);
 		TrackableScrollView playersScroll = (TrackableScrollView) findViewById(R.id.playerListScrollView);
@@ -239,24 +230,22 @@ public class BaseballPerformanceProjector extends Activity implements
 		viewableStats[4] = "OBP";
 
 		return viewableStats;
-	}
+	} 
 
 	public void fillPositionList() {
-		positionList.add("C");
-		positionList.add("1B");
-		positionList.add("2B");
-		positionList.add("SS");
-		positionList.add("3B");
-		positionList.add("OF");
-		positionList.add("OF");
-		positionList.add("OF");
-		positionList.add("UT");
+		DatabaseHandler database = new DatabaseHandler(this);
+		
+		League league = database.getLeague(league_name);
+		
+		positionList = league.getBatterPositions();
+		
+		Log.println(Log.DEBUG, "myDebug", "Pos: " + positionList.toString());
 	}
 
 	private void addUserPlayers() {
 		// load the array of player names from resources
 		DatabaseHandler databaseHandler = new DatabaseHandler(this);
-		List<Player> userPlayerList = databaseHandler.getAllUserPlayers();
+		List<Player> userPlayerList = databaseHandler.getAllUserPlayers(league_name);
 
 		for (int i = 0; i < userPlayerList.size(); i++) {
 			addPlayer(userPlayerList.get(i));
@@ -595,6 +584,7 @@ public class BaseballPerformanceProjector extends Activity implements
 						if (selectedPlayer.hasId()) {
 							Log.println(Log.DEBUG, "myDebug", "Should add "
 									+ selectedPlayer.getPlayerSummary());
+							selectedPlayer.setLeagueId(league_name);
 							addPlayer(selectedPlayer);
 							inputMethodManager.hideSoftInputFromWindow(
 									autoCompleteTextView.getWindowToken(), 0);
@@ -618,6 +608,9 @@ public class BaseballPerformanceProjector extends Activity implements
 		LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
 		final View settings_layout = inflater.inflate(R.layout.settings, null);
 		AlertDialog.Builder settingsAlert = new AlertDialog.Builder(this);
+		settingsAlert.setView(settings_layout);
+
+		final Dialog alert = settingsAlert.create();
 		
 		final RelativeLayout makeDefaultTeamLayout = (RelativeLayout)settings_layout.findViewById(R.id.makeDefaultTeamLayout);
 		final CheckBox makeDefaultTeamCheckbox = (CheckBox)settings_layout.findViewById(R.id.makeDefaultTeamCheckbox);
@@ -631,6 +624,9 @@ public class BaseballPerformanceProjector extends Activity implements
 		final LinearLayout scoringLayout = (LinearLayout)settings_layout.findViewById(R.id.scoringLayout);
 		final TextView editScoringLabel = (TextView)settings_layout.findViewById(R.id.editScoringLabel) ;
 		final TextView editScoringExtraLabel = (TextView)settings_layout.findViewById(R.id.editScoringExtraLabel);
+		
+		final RelativeLayout mainMenuLayout = (RelativeLayout)settings_layout.findViewById(R.id.mainMenuLayout);
+		final TextView mainMenuLabel = (TextView)settings_layout.findViewById(R.id.mainMenuLabel);
 		
 		makeDefaultTeamLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -672,11 +668,23 @@ public class BaseballPerformanceProjector extends Activity implements
 				}
 			}
 		});
+
+		mainMenuLayout.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mainMenuLayout.setBackgroundColor(Color.YELLOW);
+				mainMenuLabel.setTextColor(Color.BLACK);
+				alert.dismiss();
+				
+				Intent intent = new Intent(getApplicationContext(), HomeScreen.class);
+				startActivity(intent);
+				finish();
+			}
+		});
 		
 		CheckBox checkbox_homeRuns = (CheckBox)settings_layout.findViewById(R.id.checkbox_homeRuns);
-		
-		settingsAlert.setView(settings_layout);
-		settingsAlert.show();
+
+		alert.show();
 	}
 
 	public boolean hasBenchPlayer() {

@@ -2,6 +2,7 @@ package com.bpp;
 
 public class Player implements Comparable<Player> {
 	private String playerId;
+	private String leagueId;
 	private String lastName;
 	private String firstName;
 	private String batHand;
@@ -59,6 +60,14 @@ public class Player implements Comparable<Player> {
 	
 	public String getPlayerId() {
 		return playerId;
+	}
+	
+	public String getLeagueId() {
+		return leagueId;
+	}
+	
+	public void setLeagueId(String id) {
+		leagueId = id;
 	}
 	
 	public String getLastName() {
