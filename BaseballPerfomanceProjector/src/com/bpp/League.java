@@ -68,8 +68,12 @@ public class League {
 		this.leagueId = id;
 	}
 	
-	public void setDefaultLeague(int defaultLeague) {
-		this.defaultLeague = defaultLeague;
+	public void setDefaultLeague(boolean isDefaultLeague) {
+		if(isDefaultLeague) {
+			this.defaultLeague = 1;
+		} else {
+		this.defaultLeague = 0;
+		}
 	}
 
 	public String getLeagueId() {
@@ -236,6 +240,9 @@ public class League {
 	public void setOutfield(int x) {
 		outfield = x;
 	}
+	public void setUtility(int x) {
+		utility = x;
+	}
 	public void setPitchers(int x) {
 		pitchers = x;
 	}
@@ -309,5 +316,59 @@ public class League {
 			positions.add("UT");
 		}
 		return positions;
+	}
+	
+	public ArrayList<String> getLeagueBatterStats() {
+		ArrayList<String> leagueBatterStats = new ArrayList<String>();
+
+		if(hasHits()) {
+			leagueBatterStats.add("H");
+		}
+		if(hasRBI()) {
+			leagueBatterStats.add("RBI");
+		}
+		if(hasRuns()) {
+			leagueBatterStats.add("R");
+		}
+		if(hasHomeRuns()) {
+			leagueBatterStats.add("HR");
+		}
+		if(hasSteals()) {
+			leagueBatterStats.add("SB");
+		}
+		if(hasNetSteals()) {
+			leagueBatterStats.add("NSB");
+		}
+		if(hasWalks()) {
+			leagueBatterStats.add("BB");
+		}
+		if(hasStrikeouts()) {
+			leagueBatterStats.add("K");
+		}
+		if(hasOBP()) {
+			leagueBatterStats.add("OBP");
+		}
+		if(hasOPS()) {
+			leagueBatterStats.add("OPS");
+		}
+		
+		return leagueBatterStats;
+	}
+	
+	public ArrayList<String> getAllPossibleBatterStats() {
+		ArrayList<String> possibleStats = new ArrayList<String>();
+		
+		possibleStats.add("H");
+		possibleStats.add("R");
+		possibleStats.add("RBI");
+		possibleStats.add("HR");
+		possibleStats.add("BB");
+		possibleStats.add("K");
+		possibleStats.add("SB");
+		possibleStats.add("NSB");
+		possibleStats.add("OBP");
+		possibleStats.add("OPS");
+		
+		return possibleStats;
 	}
 }

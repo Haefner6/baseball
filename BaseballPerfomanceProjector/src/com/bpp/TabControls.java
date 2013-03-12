@@ -105,22 +105,15 @@ public class TabControls extends LinearLayout {
 	public void selectBatters() {
 		TextView batterSelected = (TextView)this.findViewById(1002);
 		TextView pitcherSelected = (TextView)this.findViewById(3002);
-		
-		batterSelected.setBackgroundColor(SELECTION_COLOR);
 		batterSelected.setBackgroundResource(SELECTION_COLOR);
-		
-		pitcherSelected.setBackgroundColor(TAB_COLOR);
 		pitcherSelected.setBackgroundResource(TAB_COLOR);
 	}
 	
 	public void selectPitchers() {
 		TextView batterSelected = (TextView)this.findViewById(1002);
 		TextView pitcherSelected = (TextView)this.findViewById(3002);
-		
-		batterSelected.setBackgroundColor(TAB_COLOR);
+
 		batterSelected.setBackgroundResource(TAB_COLOR);
-		
-		pitcherSelected.setBackgroundColor(SELECTION_COLOR);
 		pitcherSelected.setBackgroundResource(SELECTION_COLOR);
 	}
 	

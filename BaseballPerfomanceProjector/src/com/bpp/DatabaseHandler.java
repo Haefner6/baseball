@@ -313,11 +313,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 			return;
 		}
 		ContentValues values = new ContentValues();
-		
-		Log.println(Log.DEBUG, TAG, "AddLeague() getNumCatchers(): " + league.getNumCatchers());
+
+		Log.println(Log.DEBUG, TAG,
+				"AddLeague() getNumCatchers(): " + league.getNumCatchers());
 
 		values.put(LEAGUE_ID, league.getLeagueId());
-		values.put(LEAGUE_DEFAULT_LEAGUE,booleanToInt(league.isDefaultLeague()));
+		values.put(LEAGUE_DEFAULT_LEAGUE,
+				booleanToInt(league.isDefaultLeague()));
 		values.put(LEAGUE_CATCHER, league.getNumCatchers());
 		values.put(LEAGUE_FIRST_BASE, league.getNumFirstBase());
 		values.put(LEAGUE_SECOND_BASE, league.getNumSecondBase());
@@ -351,6 +353,49 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 		String updateQuery = "DELETE FROM " + TABLE_LEAGUES + " WHERE "
 				+ LEAGUE_ID + "='" + id + "';";
+		db.execSQL(updateQuery);
+		db.close();
+	}
+
+	public void updateLeague(League league) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String updateQuery = "UPDATE " + TABLE_LEAGUES 
+				+ " SET " + LEAGUE_DEFAULT_LEAGUE + "=" + booleanToInt(league.isDefaultLeague()) 
+				+ "," + LEAGUE_CATCHER + "=" +league.getNumCatchers()
+				+ "," + LEAGUE_FIRST_BASE + "=" +league.getNumFirstBase()
+				+ "," + LEAGUE_SECOND_BASE + "=" +league.getNumSecondBase()
+				+ "," + LEAGUE_SHORTSTOP + "=" +league.getNumShortStop()
+				+ "," + LEAGUE_THIRD_BASE + "=" +league.getNumThirdBase()
+				+ "," + LEAGUE_MIDDLE_INFIELDER + "=" +league.getNumMiddle()
+				+ "," + LEAGUE_CORNER_INFIELDER + "=" +league.getNumCorner()
+				+ "," + LEAGUE_OUTFIELD + "=" +league.getNumOutfield()
+				+ "," + LEAGUE_UTILITY + "=" +league.getNumUtility()
+				+ "," + LEAGUE_PITCHER + "=" +league.getNumPitchers()
+				+ "," + LEAGUE_STARTING_PITCHER + "=" +league.getNumStartingPitchers()
+				+ "," + LEAGUE_RELIEF_PITCHER + "=" +league.getNumReliefPitchers()
+				+ "," + LEAGUE_STAT_H + "=" +booleanToInt(league.hasHits())
+				+ "," + LEAGUE_STAT_RBI + "=" +booleanToInt(league.hasRBI())
+				+ "," + LEAGUE_STAT_R + "=" +booleanToInt(league.hasRuns())
+				+ "," + LEAGUE_STAT_HR + "=" +booleanToInt(league.hasHomeRuns())
+				+ "," + LEAGUE_STAT_BB + "=" +booleanToInt(league.hasWalks())
+				+ "," + LEAGUE_STAT_SB + "=" +booleanToInt(league.hasSteals())
+				+ "," + LEAGUE_STAT_NSB + "=" +booleanToInt(league.hasNetSteals())
+				+ "," + LEAGUE_STAT_K + "=" +booleanToInt(league.hasStrikeouts())
+				+ "," + LEAGUE_STAT_OBP + "=" +booleanToInt(league.hasOBP())
+				+ "," + LEAGUE_STAT_OPS + "=" +booleanToInt(league.hasOPS())
+				+ " WHERE "
+				+ LEAGUE_ID + "='" + league.getLeagueId() + "';";
+		db.execSQL(updateQuery);
+		db.close();
+	}
+
+	// Removes default league status from all leagues
+	public void removeDefaultLeagueStatus() {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String updateQuery = "UPDATE " + TABLE_LEAGUES + " SET "
+				+ LEAGUE_DEFAULT_LEAGUE + "="  + 0 + ";";
 		db.execSQL(updateQuery);
 		db.close();
 	}

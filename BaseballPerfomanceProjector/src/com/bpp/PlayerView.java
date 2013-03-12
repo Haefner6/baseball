@@ -1,5 +1,7 @@
 package com.bpp;
 
+import java.util.ArrayList;
+
 import android.R.color;
 import android.content.Context;
 import android.graphics.Paint;
@@ -151,5 +153,46 @@ public class PlayerView extends LinearLayout {
 	public void clearPlayer() {
 		setPlayerId("");
 		setPlayerName("--");
+	}
+	
+	public ArrayList<String> getEligiblePositions() {
+		ArrayList<String> positions = new ArrayList<String>();
+		String header = getHeader();
+		
+		if(header.equals("2B/SS")) {
+			positions.add("2B");
+			positions.add("SS");
+			return positions;
+		} else if(header.equals("1B/3B")) {
+			positions.add("1B");
+			positions.add("3B");
+			return positions;
+		} else if(header.equals("P")) {
+			positions.add("SP");
+			positions.add("RP");
+			return positions;
+		} else {
+			positions.add(header);
+		}
+		
+		return positions;
+	}
+	
+	public boolean isPlayerEligible(Player player) {
+		ArrayList<String> positions = getEligiblePositions();
+		String header = getHeader();
+		
+		for(int i=0; i<positions.size(); i++) {
+			if(player.getPosition().contains(positions.get(i))) {
+				return true;
+			}
+		}
+		if(header.equals("UT") && !player.getPosition().contains("P")) {
+			return true;
+		} else if(header.equals("P") && player.getPosition().contains("P")) {
+			return true;
+		}
+		
+		return false;
 	}
 }

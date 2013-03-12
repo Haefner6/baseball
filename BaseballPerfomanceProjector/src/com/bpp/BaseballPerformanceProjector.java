@@ -1,6 +1,5 @@
 package com.bpp;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -22,30 +21,23 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.database.SQLException;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.TextView;
 
 public class BaseballPerformanceProjector extends Activity implements
@@ -69,6 +61,8 @@ public class BaseballPerformanceProjector extends Activity implements
 		playersArrayList = new ArrayList<Player>();
 		positionList = new ArrayList<String>();
 
+		addStatsHeader();
+		
 		syncStatsScrollWithHeader();
 
 		fillPositionList();
@@ -160,7 +154,7 @@ public class BaseballPerformanceProjector extends Activity implements
 
 	public void fitTextSizes() {
 		LinearLayout playersListLayout = (LinearLayout) findViewById(R.id.playersListLayout);
-		LinearLayout statsListLayout = (LinearLayout) findViewById(R.id.statsListLayout);
+		//LinearLayout statsListLayout = (LinearLayout) findViewById(R.id.statsListLayout);
 		PlayerView playerView;
 
 		for (int i = 0; i < playersListLayout.getChildCount(); i++) {
@@ -193,6 +187,16 @@ public class BaseballPerformanceProjector extends Activity implements
 			}
 		});
 	}
+	
+	public void addStatsHeader() {
+		DatabaseHandler database = new DatabaseHandler(this);
+		League league = database.getLeague(league_name);
+		database.close();
+		
+		HorizontalScrollView statsHeaderScrollView = (HorizontalScrollView)findViewById(R.id.statsHeaderScrollView);
+		statsHeaderScrollView.removeAllViews();
+		statsHeaderScrollView.addView(new StatsView(this, league, true));
+	}
 
 	public void syncStatsScrollWithHeader() {
 		TrackableHorizontalScrollView statsScroll = (TrackableHorizontalScrollView) findViewById(R.id.statsScrollView);
@@ -212,25 +216,16 @@ public class BaseballPerformanceProjector extends Activity implements
 		LinearLayout statsListLayout = (LinearLayout) findViewById(R.id.statsListLayout);
 		playersListLayout.removeAllViews();
 		statsListLayout.removeAllViews();
-		String[] viewableStats = getViewableStats();
+		DatabaseHandler database = new DatabaseHandler(this);
+		League league = database.getLeague(league_name);
+		database.close();
 
 		for (int i = 0; i < positionList.size(); i++) {
 			playersListLayout.addView(new PlayerView(this, "", "--",
 					positionList.get(i)));
-			statsListLayout.addView(new StatsView(this, viewableStats));
+			statsListLayout.addView(new StatsView(this, league, false));
 		}
 	}
-
-	public String[] getViewableStats() {
-		String[] viewableStats = new String[5];
-		viewableStats[0] = "HR";
-		viewableStats[1] = "R";
-		viewableStats[2] = "RBI";
-		viewableStats[3] = "SB";
-		viewableStats[4] = "OBP";
-
-		return viewableStats;
-	} 
 
 	public void fillPositionList() {
 		DatabaseHandler database = new DatabaseHandler(this);
@@ -278,9 +273,7 @@ public class BaseballPerformanceProjector extends Activity implements
 		for (int i = 0; i < playersListLayout.getChildCount(); i++) {
 			PlayerView playerView = (PlayerView) playersListLayout
 					.getChildAt(i);
-			if (!playerView.hasPlayer()
-					&& (player.getPosition().contains(playerView.getPosition()) || playerView
-							.getPosition().equals("UT"))) {
+			if (!playerView.hasPlayer() && (playerView.isPlayerEligible(player))) {
 				playerView.setPlayerId(player.getPlayerId());
 				playerView.setPlayerName(player.getPlayerFullName());
 				playerView
@@ -304,8 +297,10 @@ public class BaseballPerformanceProjector extends Activity implements
 		LinearLayout statsListLayout = (LinearLayout) findViewById(R.id.statsListLayout);
 		PlayerView playerView = new PlayerView(this, player.getPlayerId(),
 				player.getPlayerFullName(), "Bench - " + player.getPosition());
-		String[] viewableStats = getViewableStats();
-		StatsView statsView = new StatsView(this, viewableStats);
+		DatabaseHandler database = new DatabaseHandler(this);
+		League league = database.getLeague(league_name);
+		database.close();
+		StatsView statsView = new StatsView(this, league, false);
 		playerView.setOnLongClickListener(new View.OnLongClickListener() {
 			public boolean onLongClick(View v) {
 				modifyPlayerDialog(player);
@@ -605,6 +600,9 @@ public class BaseballPerformanceProjector extends Activity implements
 	}
 	
 	private void settingsDialog() {
+		final DatabaseHandler database = new DatabaseHandler(this);
+		final League league = database.getLeague(league_name);
+		database.close();
 		LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
 		final View settings_layout = inflater.inflate(R.layout.settings, null);
 		AlertDialog.Builder settingsAlert = new AlertDialog.Builder(this);
@@ -627,6 +625,11 @@ public class BaseballPerformanceProjector extends Activity implements
 		
 		final RelativeLayout mainMenuLayout = (RelativeLayout)settings_layout.findViewById(R.id.mainMenuLayout);
 		final TextView mainMenuLabel = (TextView)settings_layout.findViewById(R.id.mainMenuLabel);
+		
+		
+		if(league.isDefaultLeague()) {
+			makeDefaultTeamCheckbox.setChecked(true);
+		}
 		
 		makeDefaultTeamLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -681,10 +684,68 @@ public class BaseballPerformanceProjector extends Activity implements
 				finish();
 			}
 		});
+		final NumberIncrement catcherNumber = (NumberIncrement)settings_layout.findViewById(R.id.catcherNumber);
+		final NumberIncrement firstBaseNumber = (NumberIncrement)settings_layout.findViewById(R.id.firstBaseNumber);
+		final NumberIncrement secondBaseNumber = (NumberIncrement)settings_layout.findViewById(R.id.secondBaseNumber);
+		final NumberIncrement shortStopNumber = (NumberIncrement)settings_layout.findViewById(R.id.shortStopNumber);
+		final NumberIncrement thirdBaseNumber = (NumberIncrement)settings_layout.findViewById(R.id.thirdBaseNumber);
+		final NumberIncrement middleInfieldNumber = (NumberIncrement)settings_layout.findViewById(R.id.middleInfieldNumber);
+		final NumberIncrement cornerInfieldNumber = (NumberIncrement)settings_layout.findViewById(R.id.cornerInfieldNumber);
+		final NumberIncrement outfieldNumber = (NumberIncrement)settings_layout.findViewById(R.id.outfieldNumber);
+		final NumberIncrement utilNumber = (NumberIncrement)settings_layout.findViewById(R.id.utilNumber);
+		final NumberIncrement pitcherNumber = (NumberIncrement)settings_layout.findViewById(R.id.pitcherNumber);
+		final NumberIncrement startingPitcherNumber = (NumberIncrement)settings_layout.findViewById(R.id.startingPitcherNumber);
+		final NumberIncrement reliefPitcherNumber = (NumberIncrement)settings_layout.findViewById(R.id.reliefPitcherNumber);
 		
+		catcherNumber.setNumber(league.getNumCatchers());
+		firstBaseNumber.setNumber(league.getNumFirstBase());
+		secondBaseNumber.setNumber(league.getNumSecondBase());
+		shortStopNumber.setNumber(league.getNumShortStop());
+		thirdBaseNumber.setNumber(league.getNumThirdBase());
+		middleInfieldNumber.setNumber(league.getNumMiddle());
+		cornerInfieldNumber.setNumber(league.getNumCorner());
+		outfieldNumber.setNumber(league.getNumOutfield());
+		utilNumber.setNumber(league.getNumUtility());
+		pitcherNumber.setNumber(league.getNumPitchers());
+		startingPitcherNumber.setNumber(league.getNumStartingPitchers());
+		reliefPitcherNumber.setNumber(league.getNumReliefPitchers());
+		
+		CheckBox checkbox_hits = (CheckBox)settings_layout.findViewById(R.id.checkbox_hits);
 		CheckBox checkbox_homeRuns = (CheckBox)settings_layout.findViewById(R.id.checkbox_homeRuns);
-
+		CheckBox checkbox_RBI = (CheckBox)settings_layout.findViewById(R.id.checkbox_RBI);
+		CheckBox checkbox_runs = (CheckBox)settings_layout.findViewById(R.id.checkbox_runs);
+		CheckBox checkbox_strikeouts = (CheckBox)settings_layout.findViewById(R.id.checkbox_strikeouts);
+		CheckBox checkbox_obp = (CheckBox)settings_layout.findViewById(R.id.checkbox_obp);
+		
 		alert.show();
+		alert.setOnDismissListener(new OnDismissListener() {
+			@Override
+			public void onDismiss(DialogInterface arg0) {
+				Log.println(Log.DEBUG, "myDebug", "Inside settings onDismiss()");
+				if(makeDefaultTeamCheckbox.isChecked()) {
+					database.removeDefaultLeagueStatus();
+				}
+				league.setDefaultLeague(makeDefaultTeamCheckbox.isChecked());
+				
+				league.setCatchers(catcherNumber.getNumber());
+				league.setFirstBase(firstBaseNumber.getNumber());
+				league.setSecondBase(secondBaseNumber.getNumber());
+				league.setShortStop(shortStopNumber.getNumber());
+				league.setThirdBase(thirdBaseNumber.getNumber());
+				league.setMiddle(middleInfieldNumber.getNumber());
+				league.setCorner(cornerInfieldNumber.getNumber());
+				league.setOutfield(outfieldNumber.getNumber());
+				league.setUtility(utilNumber.getNumber());
+				league.setPitchers(pitcherNumber.getNumber());
+				league.setStartingPitchers(startingPitcherNumber.getNumber());
+				league.setReliefPitchers(reliefPitcherNumber.getNumber());
+				
+				
+				
+				database.updateLeague(league);
+			}
+			
+		});
 	}
 
 	public boolean hasBenchPlayer() {

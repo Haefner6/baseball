@@ -102,6 +102,10 @@ public class HomeScreen extends Activity {
 					addNewTeamLabel.setTextColor(Color.BLACK);
 					newTeamLayout.setVisibility(View.VISIBLE);
 					newTeamName.requestFocus();
+					
+					viewTeamsLayout.setBackgroundColor(Color.BLACK);
+					viewTeamsLabel.setTextColor(Color.WHITE);
+					teamsLayout.setVisibility(View.GONE);
 				} else {
 					addNewTeamLayout.setBackgroundColor(Color.BLACK);
 					addNewTeamLabel.setTextColor(Color.WHITE);
@@ -120,6 +124,10 @@ public class HomeScreen extends Activity {
 						viewTeamsLayout.setBackgroundColor(Color.YELLOW);
 						viewTeamsLabel.setTextColor(Color.BLACK);
 						teamsLayout.setVisibility(View.VISIBLE);
+						
+						addNewTeamLayout.setBackgroundColor(Color.BLACK);
+						addNewTeamLabel.setTextColor(Color.WHITE);
+						newTeamLayout.setVisibility(View.GONE);
 					} else {
 						viewTeamsLayout.setBackgroundColor(Color.BLACK);
 						viewTeamsLabel.setTextColor(Color.WHITE);

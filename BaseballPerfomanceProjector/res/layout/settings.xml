@@ -189,7 +189,7 @@
                         android:typeface="serif" />
 
                     <com.bpp.NumberIncrement
-                        android:id="@+id/ssBaseNumber"
+                        android:id="@+id/shortStopNumber"
                         android:layout_width="0dip"
                         android:layout_height="match_parent"
                         android:layout_weight="6" />
