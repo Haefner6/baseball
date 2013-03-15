@@ -33,6 +33,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	private static final String BATTER_THROWS = "throwHand";
 	private static final String BATTER_TEAM = "team";
 	private static final String BATTER_POSITION = "position";
+	private static final String BATTER_PLACED_POSITION = "placedPosition";
 
 	// League Settings
 	private static final String LEAGUE_ID = "leagueId";
@@ -67,13 +68,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	// Creating Tables
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String CREATE_BATTERS_TABLE = "CREATE TABLE " + TABLE_BATTERS_STATS
-				+ "(" + BATTER_ID + " TEXT," + BATTER_DATE + " TEXT,"
-				+ BATTER_LAST + " TEXT," + BATTER_FIRST + " TEXT," + BATTER_BAT
-				+ " TEXT," + BATTER_THROWS + " TEXT," + BATTER_POSITION
-				+ " TEXT" + ")";
+		String CREATE_BATTER_STATS_TABLE = "CREATE TABLE "
+				+ TABLE_BATTERS_STATS + "(" + BATTER_ID + " TEXT," + LEAGUE_ID
+				+ " TEXT," + BATTER_DATE + " TEXT," + LEAGUE_STAT_H + " TEXT,"
+				+ LEAGUE_STAT_RBI + " TEXT," + LEAGUE_STAT_R + " TEXT,"
+				+ LEAGUE_STAT_HR + " TEXT," + LEAGUE_STAT_BB + " TEXT,"
+				+ LEAGUE_STAT_SB + " TEXT," + LEAGUE_STAT_NSB + " TEXT,"
+				+ LEAGUE_STAT_K + " TEXT," + LEAGUE_STAT_OBP + " TEXT,"
+				+ LEAGUE_STAT_OPS + " TEXT," + BATTER_PLACED_POSITION + " TEXT"
+				+ ")";
 		String CREATE_USER_PLAYERS_TABLE = "CREATE TABLE " + TABLE_USER_PLAYERS
-				+ "(" + BATTER_ID + " TEXT PRIMARY KEY," + LEAGUE_ID + " TEXT,"
+				+ "(" + BATTER_ID + " TEXT," + LEAGUE_ID + " TEXT,"
 				+ BATTER_LAST + " TEXT," + BATTER_FIRST + " TEXT," + BATTER_BAT
 				+ " TEXT," + BATTER_THROWS + " TEXT," + BATTER_TEAM + " TEXT,"
 				+ BATTER_POSITION + " TEXT" + ")";
@@ -94,7 +99,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				+ LEAGUE_STAT_OBP + " INTEGER," + LEAGUE_STAT_OPS + " INTEGER"
 				+ ")";
 
-		db.execSQL(CREATE_BATTERS_TABLE);
+		db.execSQL(CREATE_BATTER_STATS_TABLE);
 		db.execSQL(CREATE_USER_PLAYERS_TABLE);
 		db.execSQL(CREATE_LEAGUES_TABLE);
 	}
@@ -104,6 +109,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// Drop older table if existed
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_BATTERS_STATS);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_PLAYERS);
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_LEAGUES);
 		// Create tables again
 		onCreate(db);
 	}
@@ -112,10 +119,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_BATTERS_STATS);
 
-		String CREATE_PLAYERS_TABLE = "CREATE TABLE " + TABLE_BATTERS_STATS
-				+ "(" + BATTER_ID + " TEXT," + BATTER_LAST + " TEXT,"
-				+ BATTER_FIRST + " TEXT," + BATTER_BAT + " TEXT,"
-				+ BATTER_THROWS + " TEXT," + BATTER_POSITION + " TEXT" + ")";
+		String CREATE_BATTER_STATS_TABLE = "CREATE TABLE "
+				+ TABLE_BATTERS_STATS + "(" + BATTER_ID + " TEXT," + LEAGUE_ID
+				+ " TEXT," + BATTER_DATE + " TEXT," + LEAGUE_STAT_H + " TEXT,"
+				+ LEAGUE_STAT_RBI + " TEXT," + LEAGUE_STAT_R + " TEXT,"
+				+ LEAGUE_STAT_HR + " TEXT," + LEAGUE_STAT_BB + " TEXT,"
+				+ LEAGUE_STAT_SB + " TEXT," + LEAGUE_STAT_NSB + " TEXT,"
+				+ LEAGUE_STAT_K + " TEXT," + LEAGUE_STAT_OBP + " TEXT,"
+				+ LEAGUE_STAT_OPS + " TEXT," + BATTER_PLACED_POSITION + " TEXT"
+				+ ")";
 		String CREATE_USER_PLAYERS_TABLE = "CREATE TABLE " + TABLE_USER_PLAYERS
 				+ "(" + BATTER_ID + " TEXT PRIMARY KEY," + LEAGUE_ID + " TEXT,"
 				+ BATTER_LAST + " TEXT," + BATTER_FIRST + " TEXT," + BATTER_BAT
@@ -138,7 +150,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				+ LEAGUE_STAT_OBP + " INTEGER," + LEAGUE_STAT_OPS + " INTEGER"
 				+ ")";
 
-		db.execSQL(CREATE_PLAYERS_TABLE);
+		db.execSQL(CREATE_BATTER_STATS_TABLE);
 		db.execSQL(CREATE_USER_PLAYERS_TABLE);
 		db.execSQL(CREATE_LEAGUES_TABLE);
 		db.close();
@@ -146,15 +158,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 	// Add New user_player
 	public void addUserPlayer(Player player) {
-		SQLiteDatabase db = this.getWritableDatabase();
+		String selectQuery = "SELECT  * FROM " + TABLE_USER_PLAYERS + " WHERE "
+				+ BATTER_ID + " = '" + player.getPlayerId() + "' " + "AND "
+				+ LEAGUE_ID + "='" + player.getLeagueId() + "';";
 
-		// Check to see if playerId already exists and return if it does
-		Cursor cursor = db.query(TABLE_USER_PLAYERS, new String[] { BATTER_ID,
-				LEAGUE_ID, BATTER_LAST, BATTER_FIRST, BATTER_BAT,
-				BATTER_THROWS, BATTER_TEAM, BATTER_POSITION },
-				BATTER_ID + "=?",
-				new String[] { String.valueOf(player.getPlayerId()) }, null,
-				null, null, null);
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
 			db.close();
 			return;
@@ -186,6 +196,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		db.close();
 	}
 
+	// Removes Player from user_players AND batters_stats tables
 	public void removePlayer(Player player) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
@@ -193,47 +204,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				+ BATTER_ID + "='" + player.getPlayerId() + "' AND "
 				+ LEAGUE_ID + " = '" + player.getLeagueId() + "';";
 		db.execSQL(updateQuery);
+		
+		updateQuery = "DELETE FROM " + TABLE_BATTERS_STATS + " WHERE "
+				+ BATTER_ID + "='" + player.getPlayerId() + "' AND "
+				+ LEAGUE_ID + " = '" + player.getLeagueId() + "';";
+		db.execSQL(updateQuery);
+		
 		db.close();
 	}
+	
+	public boolean hasPlayer(Player player) {
+		String selectQuery = "SELECT  * FROM " + TABLE_USER_PLAYERS + " WHERE "
+				+ BATTER_ID + " = '" + player.getPlayerId() + "' " + "AND "
+				+ LEAGUE_ID + "='" + player.getLeagueId() + "';";
 
-	/*
-	 * 
-	 * // Add new batterStat public void addBatter(BatterStats batterStats) {
-	 * SQLiteDatabase db = this.getWritableDatabase();
-	 * 
-	 * // Check to see if playerId already exists and return if it does Cursor
-	 * cursor = db.query(TABLE_BATTERS, new String[] { BATTER_ID, BATTER_DATE,
-	 * BATTER_LAST, BATTER_FIRST, BATTER_BAT, BATTER_THROWS, BATTER_POSITION},
-	 * BATTER_ID + "=?", new String[] {
-	 * String.valueOf(batterStats.getPlayerId()) }, null, null, null, null); if
-	 * (cursor.moveToFirst()) { Log.println(Log.DEBUG, TAG,
-	 * "Player already exists"); return; }
-	 * 
-	 * ContentValues values = new ContentValues(); values.put(BATTER_ID,
-	 * batterStats.getPlayerId()); values.put(BATTER_DATE,
-	 * batterStats.getDate()); values.put(BATTER_FIRST,
-	 * batterStats.getFirstName()); // Player first name values.put(BATTER_LAST,
-	 * batterStats.getLastName()); values.put(BATTER_BAT,
-	 * batterStats.getBatHand()); values.put(BATTER_THROWS,
-	 * batterStats.getThrowHand()); values.put(BATTER_POSITION,
-	 * batterStats.getPosition());
-	 * 
-	 * // Inserting Row db.insert(TABLE_BATTERS, null, values); db.close(); //
-	 * Closing database connection }
-	 * 
-	 * 
-	 * public Player getBatter(String id) { SQLiteDatabase db =
-	 * this.getReadableDatabase();
-	 * 
-	 * Cursor cursor = db.query(TABLE_BATTERS_STATS, new String[] { BATTER_ID,
-	 * BATTER_LAST, BATTER_DATE, BATTER_FIRST, BATTER_BAT, BATTER_THROWS,
-	 * BATTER_POSITION }, BATTER_ID + "=?", new String[] { String.valueOf(id) },
-	 * null, null, null, null); if (cursor != null) cursor.moveToFirst();
-	 * 
-	 * Player player = new Player(cursor.getString(0), cursor.getString(1),
-	 * cursor.getString(2), cursor.getString(3), cursor.getString(4),
-	 * cursor.getString(5), cursor.getString(6)); return player; }
-	 */
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			db.close();
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	public List<Player> getAllUserPlayers(String leagueId) {
 		List<Player> playerList = new ArrayList<Player>();
@@ -258,8 +252,128 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		return playerList;
 	}
 
+	// Add New BatterStats
+	public void addBatterStats(BatterStats batterStats) {
+		String selectQuery = "SELECT  * FROM " + TABLE_BATTERS_STATS
+				+ " WHERE " + BATTER_ID + " = '" + batterStats.getPlayerId()
+				+ "' " + "AND " + BATTER_DATE + " = '" + batterStats.getDate()
+				+ "' " + "AND " + LEAGUE_ID + "='" + batterStats.getLeagueId()
+				+ "';";
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			db.close();
+			return;
+		}
+		
+		Log.println(Log.DEBUG, TAG, "Adding BatterStats: " + batterStats.toString());
+
+		ContentValues values = new ContentValues();
+		values.put(BATTER_ID, batterStats.getPlayerId());
+		values.put(LEAGUE_ID, batterStats.getLeagueId());
+		values.put(BATTER_DATE, batterStats.getDate());
+		values.put(LEAGUE_STAT_H, batterStats.getHits());
+		values.put(LEAGUE_STAT_RBI, batterStats.getRbi());
+		values.put(LEAGUE_STAT_R, batterStats.getRuns());
+		values.put(LEAGUE_STAT_HR, batterStats.getHomeRuns());
+		values.put(LEAGUE_STAT_BB, batterStats.getWalks());
+		values.put(LEAGUE_STAT_SB, batterStats.getSteals());
+		values.put(LEAGUE_STAT_NSB, batterStats.getNetSteals());
+		values.put(LEAGUE_STAT_K, batterStats.getStrikeouts());
+		values.put(LEAGUE_STAT_OBP, batterStats.getOBP());
+		values.put(LEAGUE_STAT_OPS, batterStats.getOPS());
+		values.put(BATTER_PLACED_POSITION, batterStats.getPosition());
+
+		// Inserting Row
+		db.insert(TABLE_BATTERS_STATS, null, values);
+		db.close(); // Closing database connection
+	}
+	
+	public BatterStats getBatterStats(String playerId, String leagueId, String date) {
+		String selectQuery = "SELECT  * FROM " + TABLE_BATTERS_STATS
+				+ " WHERE " + BATTER_ID + " = '" + playerId
+				+ "' " + "AND " + BATTER_DATE + " = '" + date
+				+ "' " + "AND " + LEAGUE_ID + "='" + leagueId + "';";
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+
+		BatterStats batterStats = null;
+
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			batterStats = new BatterStats(cursor.getString(0), cursor.getString(1),
+					cursor.getString(2), cursor.getString(3), cursor.getString(4),
+					cursor.getString(5), cursor.getString(6), cursor.getString(7),
+					cursor.getString(8), cursor.getString(9), cursor.getString(10),
+					cursor.getString(11), cursor.getString(12), cursor.getString(13));
+		}
+		db.close();
+		
+		return batterStats;
+	}
+	
+	public List<BatterStats> getAllBatterStats(String leagueId, String date) {
+		List<BatterStats> batterStatsList = new ArrayList<BatterStats>();
+		// Select All Query
+		String selectQuery = "SELECT  * FROM " + TABLE_BATTERS_STATS 
+				+ " WHERE "+ LEAGUE_ID + " = '" + leagueId 
+				+ "' AND " + BATTER_DATE + " = '" + date + "';";
+
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				BatterStats batterStats = new BatterStats(cursor.getString(0), cursor.getString(1),
+						cursor.getString(2), cursor.getString(3), cursor.getString(4),
+						cursor.getString(5), cursor.getString(6), cursor.getString(7),
+						cursor.getString(8), cursor.getString(9), cursor.getString(10),
+						cursor.getString(11), cursor.getString(12), cursor.getString(13));
+				batterStatsList.add(batterStats);
+			} while (cursor.moveToNext());
+		}
+		db.close();
+		return batterStatsList;
+	}
+	
+	public void updateBatterStats(BatterStats batterStats) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String updateQuery = "UPDATE " + TABLE_BATTERS_STATS + " SET "
+				+ LEAGUE_STAT_H + "=" + batterStats.getHits() + ","
+				+ LEAGUE_STAT_RBI + "=" + batterStats.getRbi() + ","
+				+ LEAGUE_STAT_R + "=" + batterStats.getRuns()  + ","
+				+ LEAGUE_STAT_HR + "=" + batterStats.getHomeRuns() + ","
+				+ LEAGUE_STAT_BB + "=" + batterStats.getWalks() + ","
+				+ LEAGUE_STAT_SB + "=" + batterStats.getSteals() + ","
+				+ LEAGUE_STAT_NSB + "=" + batterStats.getNetSteals() + ","
+				+ LEAGUE_STAT_K + "=" + batterStats.getStrikeouts() + ","
+				+ LEAGUE_STAT_OBP + "=" + batterStats.getOBP() + ","
+				+ LEAGUE_STAT_OPS + "=" + batterStats.getOPS()
+				+ " WHERE " + BATTER_ID + " = '" + batterStats.getPlayerId()
+				+ "' " + "AND " + BATTER_DATE + " = '" + batterStats.getDate()
+				+ "' " + "AND " + LEAGUE_ID + "='" + batterStats.getLeagueId() + "';";
+		db.execSQL(updateQuery);
+		db.close();
+	}
+	
+	public void updateBatterStatsPosition(BatterStats batterStats, String newPosition) {
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String updateQuery = "UPDATE " + TABLE_BATTERS_STATS + " SET "
+				+ BATTER_PLACED_POSITION + "=" + newPosition + ","
+				+ " WHERE " + BATTER_ID + " = '" + batterStats.getPlayerId()
+				+ "' " + "AND " + BATTER_DATE + " = '" + batterStats.getDate()
+				+ "' " + "AND " + LEAGUE_ID + "='" + batterStats.getLeagueId() + "';";
+		db.execSQL(updateQuery);
+		db.close();
+	}
+
 	public League getLeague(String id) {
-		String selectQuery = "SELECT  * FROM " + TABLE_LEAGUES;
+		String selectQuery = "SELECT  * FROM " + TABLE_LEAGUES + " WHERE "
+				+ LEAGUE_ID + " = '" + id + "';";
 
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -353,39 +467,52 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 		String updateQuery = "DELETE FROM " + TABLE_LEAGUES + " WHERE "
 				+ LEAGUE_ID + "='" + id + "';";
+		Log.println(Log.DEBUG, TAG, updateQuery);
 		db.execSQL(updateQuery);
+		
+		updateQuery = "DELETE FROM " + TABLE_BATTERS_STATS + " WHERE "
+				+ LEAGUE_ID + "='" + id + "';";
+		Log.println(Log.DEBUG, TAG, updateQuery);
+		db.execSQL(updateQuery);
+		
+		updateQuery = "DELETE FROM " + TABLE_USER_PLAYERS + " WHERE "
+				+ LEAGUE_ID + "='" + id + "';";
+		Log.println(Log.DEBUG, TAG, updateQuery);
+		db.execSQL(updateQuery);
+		
 		db.close();
 	}
 
 	public void updateLeague(League league) {
 		SQLiteDatabase db = this.getWritableDatabase();
 
-		String updateQuery = "UPDATE " + TABLE_LEAGUES 
-				+ " SET " + LEAGUE_DEFAULT_LEAGUE + "=" + booleanToInt(league.isDefaultLeague()) 
-				+ "," + LEAGUE_CATCHER + "=" +league.getNumCatchers()
-				+ "," + LEAGUE_FIRST_BASE + "=" +league.getNumFirstBase()
-				+ "," + LEAGUE_SECOND_BASE + "=" +league.getNumSecondBase()
-				+ "," + LEAGUE_SHORTSTOP + "=" +league.getNumShortStop()
-				+ "," + LEAGUE_THIRD_BASE + "=" +league.getNumThirdBase()
-				+ "," + LEAGUE_MIDDLE_INFIELDER + "=" +league.getNumMiddle()
-				+ "," + LEAGUE_CORNER_INFIELDER + "=" +league.getNumCorner()
-				+ "," + LEAGUE_OUTFIELD + "=" +league.getNumOutfield()
-				+ "," + LEAGUE_UTILITY + "=" +league.getNumUtility()
-				+ "," + LEAGUE_PITCHER + "=" +league.getNumPitchers()
-				+ "," + LEAGUE_STARTING_PITCHER + "=" +league.getNumStartingPitchers()
-				+ "," + LEAGUE_RELIEF_PITCHER + "=" +league.getNumReliefPitchers()
-				+ "," + LEAGUE_STAT_H + "=" +booleanToInt(league.hasHits())
-				+ "," + LEAGUE_STAT_RBI + "=" +booleanToInt(league.hasRBI())
-				+ "," + LEAGUE_STAT_R + "=" +booleanToInt(league.hasRuns())
-				+ "," + LEAGUE_STAT_HR + "=" +booleanToInt(league.hasHomeRuns())
-				+ "," + LEAGUE_STAT_BB + "=" +booleanToInt(league.hasWalks())
-				+ "," + LEAGUE_STAT_SB + "=" +booleanToInt(league.hasSteals())
-				+ "," + LEAGUE_STAT_NSB + "=" +booleanToInt(league.hasNetSteals())
-				+ "," + LEAGUE_STAT_K + "=" +booleanToInt(league.hasStrikeouts())
-				+ "," + LEAGUE_STAT_OBP + "=" +booleanToInt(league.hasOBP())
-				+ "," + LEAGUE_STAT_OPS + "=" +booleanToInt(league.hasOPS())
-				+ " WHERE "
-				+ LEAGUE_ID + "='" + league.getLeagueId() + "';";
+		String updateQuery = "UPDATE " + TABLE_LEAGUES + " SET "
+				+ LEAGUE_DEFAULT_LEAGUE + "="
+				+ booleanToInt(league.isDefaultLeague()) + "," + LEAGUE_CATCHER
+				+ "=" + league.getNumCatchers() + "," + LEAGUE_FIRST_BASE + "="
+				+ league.getNumFirstBase() + "," + LEAGUE_SECOND_BASE + "="
+				+ league.getNumSecondBase() + "," + LEAGUE_SHORTSTOP + "="
+				+ league.getNumShortStop() + "," + LEAGUE_THIRD_BASE + "="
+				+ league.getNumThirdBase() + "," + LEAGUE_MIDDLE_INFIELDER
+				+ "=" + league.getNumMiddle() + "," + LEAGUE_CORNER_INFIELDER
+				+ "=" + league.getNumCorner() + "," + LEAGUE_OUTFIELD + "="
+				+ league.getNumOutfield() + "," + LEAGUE_UTILITY + "="
+				+ league.getNumUtility() + "," + LEAGUE_PITCHER + "="
+				+ league.getNumPitchers() + "," + LEAGUE_STARTING_PITCHER + "="
+				+ league.getNumStartingPitchers() + "," + LEAGUE_RELIEF_PITCHER
+				+ "=" + league.getNumReliefPitchers() + "," + LEAGUE_STAT_H
+				+ "=" + booleanToInt(league.hasHits()) + "," + LEAGUE_STAT_RBI
+				+ "=" + booleanToInt(league.hasRBI()) + "," + LEAGUE_STAT_R
+				+ "=" + booleanToInt(league.hasRuns()) + "," + LEAGUE_STAT_HR
+				+ "=" + booleanToInt(league.hasHomeRuns()) + ","
+				+ LEAGUE_STAT_BB + "=" + booleanToInt(league.hasWalks()) + ","
+				+ LEAGUE_STAT_SB + "=" + booleanToInt(league.hasSteals()) + ","
+				+ LEAGUE_STAT_NSB + "=" + booleanToInt(league.hasNetSteals())
+				+ "," + LEAGUE_STAT_K + "="
+				+ booleanToInt(league.hasStrikeouts()) + "," + LEAGUE_STAT_OBP
+				+ "=" + booleanToInt(league.hasOBP()) + "," + LEAGUE_STAT_OPS
+				+ "=" + booleanToInt(league.hasOPS()) + " WHERE " + LEAGUE_ID
+				+ "='" + league.getLeagueId() + "';";
 		db.execSQL(updateQuery);
 		db.close();
 	}
@@ -395,7 +522,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		String updateQuery = "UPDATE " + TABLE_LEAGUES + " SET "
-				+ LEAGUE_DEFAULT_LEAGUE + "="  + 0 + ";";
+				+ LEAGUE_DEFAULT_LEAGUE + "=" + 0 + ";";
 		db.execSQL(updateQuery);
 		db.close();
 	}

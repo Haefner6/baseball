@@ -197,7 +197,6 @@ public class HomeScreen extends Activity {
 			public void onClick(View v) {
 				RadioButton selected = (RadioButton)findViewById(radioTeams.getCheckedRadioButtonId());
 				String name = selected.getText().toString();
-				
 				Intent intent = new Intent(getApplicationContext(), BaseballPerformanceProjector.class);
         		intent.putExtra("league_name", name);
 				startActivity(intent);

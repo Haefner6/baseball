@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.util.Log;
@@ -43,7 +44,6 @@ import android.widget.TextView;
 public class BaseballPerformanceProjector extends Activity implements
 		HorizontalScrollViewListener, ScrollViewListener {
 	String league_name;
-	ArrayList<Player> playersArrayList;
 	ArrayList<String> positionList;
 
 	/** Called when the activity is first created. */
@@ -57,20 +57,19 @@ public class BaseballPerformanceProjector extends Activity implements
         {
         	league_name = extras.getString("league_name");
         }
-
-		playersArrayList = new ArrayList<Player>();
 		positionList = new ArrayList<String>();
 
 		addStatsHeader();
-		
 		syncStatsScrollWithHeader();
 
 		fillPositionList();
-		restorePreviousPlayerConfiguration();
-		addUserPlayers();
-
+		restoreBatterPositionsConfiguration();
 		setInterfaceFeatures();
+		
+		loadLastPlayerLineupConfiguration();
+		
 		initializeTabs();
+		onConfigurationChanged(getResources().getConfiguration());
 	}
  
 	@Override
@@ -162,14 +161,36 @@ public class BaseballPerformanceProjector extends Activity implements
 			playerView.fitAllTextSizes();
 		}
 	}
+	
+	public void resetLineup() {
+		fillPositionList();
+		restoreBatterPositionsConfiguration();
+		loadLastPlayerLineupConfiguration();
+	}
 
 	public void setInterfaceFeatures() {
 		final InterfaceControls interfaceControls = (InterfaceControls) findViewById(R.id.uiControls);
 		// Eventually will check user's last day
 		Calendar calendar = Calendar.getInstance();
 		interfaceControls.setDate(calendar);
-		interfaceControls.setPreviousDateClickListener();
-		interfaceControls.setNextDateClickListener();
+		interfaceControls.setPreviousDateClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				// If date actually changes...
+				if(interfaceControls.previousDate()) {
+					resetLineup();
+				}
+			}
+		});
+		
+		interfaceControls.setNextDateClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				// If date actually changes...
+				if(interfaceControls.nextDate()) {
+					resetLineup();
+				}
+			}
+		});
+		
 		interfaceControls.setAddPlayerListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				interfaceControls.setAddPlayerClickable(false);
@@ -195,7 +216,7 @@ public class BaseballPerformanceProjector extends Activity implements
 		
 		HorizontalScrollView statsHeaderScrollView = (HorizontalScrollView)findViewById(R.id.statsHeaderScrollView);
 		statsHeaderScrollView.removeAllViews();
-		statsHeaderScrollView.addView(new StatsView(this, league, true));
+		statsHeaderScrollView.addView(new StatsView(this, league, true, true));
 	}
 
 	public void syncStatsScrollWithHeader() {
@@ -211,7 +232,7 @@ public class BaseballPerformanceProjector extends Activity implements
 		playersScroll.setScrollViewListener(this);
 	}
 
-	public void restorePreviousPlayerConfiguration() {
+	public void restoreBatterPositionsConfiguration() {
 		LinearLayout playersListLayout = (LinearLayout) findViewById(R.id.playersListLayout);
 		LinearLayout statsListLayout = (LinearLayout) findViewById(R.id.statsListLayout);
 		playersListLayout.removeAllViews();
@@ -223,47 +244,100 @@ public class BaseballPerformanceProjector extends Activity implements
 		for (int i = 0; i < positionList.size(); i++) {
 			playersListLayout.addView(new PlayerView(this, "", "--",
 					positionList.get(i)));
-			statsListLayout.addView(new StatsView(this, league, false));
+			statsListLayout.addView(new StatsView(this, league, true, false));
 		}
 	}
 
 	public void fillPositionList() {
 		DatabaseHandler database = new DatabaseHandler(this);
-		
 		League league = database.getLeague(league_name);
-		
 		positionList = league.getBatterPositions();
+		database.close();
 		
 		Log.println(Log.DEBUG, "myDebug", "Pos: " + positionList.toString());
 	}
 
-	private void addUserPlayers() {
-		// load the array of player names from resources
-		DatabaseHandler databaseHandler = new DatabaseHandler(this);
-		List<Player> userPlayerList = databaseHandler.getAllUserPlayers(league_name);
+	// Load the teams players and place them in their last lineup spot for the
+	// current date
+	public void loadLastPlayerLineupConfiguration() {
+		InterfaceControls uiControls = (InterfaceControls)findViewById(R.id.uiControls);
+		String date = uiControls.getDate();
+		DatabaseHandler database = new DatabaseHandler(this);
+		League league = database.getLeague(league_name);
+		List<Player> userPlayerList = database.getAllUserPlayers(league_name);
 
-		for (int i = 0; i < userPlayerList.size(); i++) {
-			addPlayer(userPlayerList.get(i));
-		} // end for loop
-		databaseHandler.close();
-	} // end method addSamplePlayers
-
+		ArrayList<Player> unplacedPlayers = new ArrayList<Player>();
+		
+		for(int i=0; i< userPlayerList.size(); i++) {
+			BatterStats batterStats = database.getBatterStats(userPlayerList.get(i).getPlayerId(), league_name, date);
+			
+			if(batterStats == null) {
+				unplacedPlayers.add(userPlayerList.get(i));
+			} else {
+				placePlayerInSlot(league, userPlayerList.get(i), batterStats.getPosition());
+				changeStatsViews(batterStats);
+			}
+		}
+		
+		for(int j=0; j < unplacedPlayers.size(); j++) {
+			if(!fillEmptySlot(unplacedPlayers.get(j))) {
+				addBenchPlayer(unplacedPlayers.get(j));
+			} 
+		}
+		
+		database.close();
+	}
+	
+	// Place a player in a specific spot
+	public void placePlayerInSlot(League league, final Player player, String spot) {
+		LinearLayout playersListLayout = (LinearLayout) findViewById(R.id.playersListLayout);
+		if(!spot.contains("Bench")) {
+			for (int i = 0; i < playersListLayout.getChildCount(); i++) {
+				PlayerView playerView = (PlayerView) playersListLayout.getChildAt(i);
+				if (!playerView.hasPlayer() && (playerView.getHeader().equals(spot))) {
+					playerView.setPlayerId(player.getPlayerId());
+					playerView.setPlayerName(player.getPlayerFullName());
+					playerView.setOnLongClickListener(new View.OnLongClickListener() {
+						public boolean onLongClick(View v) {
+							modifyPlayerDialog(player);
+							return true;
+						}
+					});
+					return;
+				}
+			}
+		} else {	// Else player was on bench
+			LinearLayout statsListLayout = (LinearLayout) findViewById(R.id.statsListLayout);
+			PlayerView playerView = new PlayerView(this, player.getPlayerId(),player.getPlayerFullName(), spot);
+			StatsView statsView = new StatsView(this, league, true, false);
+			playerView.setOnLongClickListener(new View.OnLongClickListener() {
+				public boolean onLongClick(View v) {
+					modifyPlayerDialog(player);
+					return true;
+				}
+			});
+			playersListLayout.addView(playerView);
+			statsListLayout.addView(statsView);
+		}
+	}
+	
 	// add a new player to the player Array List and slot it
 	public void addPlayer(Player player) {
+		DatabaseHandler database = new DatabaseHandler(this);
 		// Check for duplicate player
-		for (int i = 0; i < playersArrayList.size(); i++) {
-			if (playersArrayList.get(i).equals(player)) {
-				return;
-			}
-		} // end for loop
-		playersArrayList.add(player);
+		if(database.hasPlayer(player)) {
+			database.close();
+			return;
+		}
 		if (fillEmptySlot(player)) {
+			database.close();
 			return;
 		} else {
 			// Log.println(Log.DEBUG, "myDebug", "Adding " +
 			// player.getPlayerFullName() + " to bench");
 			addBenchPlayer(player);
 		}
+		database.close();
 	} // end method addPlayer
 
 	// Places a player in an available spot. Returns false if none available
@@ -271,21 +345,24 @@ public class BaseballPerformanceProjector extends Activity implements
 		LinearLayout playersListLayout = (LinearLayout) findViewById(R.id.playersListLayout);
 
 		for (int i = 0; i < playersListLayout.getChildCount(); i++) {
-			PlayerView playerView = (PlayerView) playersListLayout
-					.getChildAt(i);
+			PlayerView playerView = (PlayerView) playersListLayout.getChildAt(i);
 			if (!playerView.hasPlayer() && (playerView.isPlayerEligible(player))) {
 				playerView.setPlayerId(player.getPlayerId());
 				playerView.setPlayerName(player.getPlayerFullName());
-				playerView
-						.setOnLongClickListener(new View.OnLongClickListener() {
-							public boolean onLongClick(View v) {
-								modifyPlayerDialog(player);
-								return true;
-							}
-						});
-				// Add Player to user_player table
+				playerView.setOnLongClickListener(new View.OnLongClickListener() {
+					public boolean onLongClick(View v) {
+						modifyPlayerDialog(player);
+						return true;
+					}
+				});
+				// Add Player to user_player and batter_stats table
+				InterfaceControls uiControls = (InterfaceControls)findViewById(R.id.uiControls);
+				String date = uiControls.getDate();
+				BatterStats batterStats = new BatterStats(player.getPlayerId(), league_name, date,playerView.getHeader()); 
 				DatabaseHandler userDatabase = new DatabaseHandler(this);
 				userDatabase.addUserPlayer(player);
+				userDatabase.addBatterStats(batterStats);
+				userDatabase.close();
 				return true;
 			}
 		}
@@ -300,7 +377,7 @@ public class BaseballPerformanceProjector extends Activity implements
 		DatabaseHandler database = new DatabaseHandler(this);
 		League league = database.getLeague(league_name);
 		database.close();
-		StatsView statsView = new StatsView(this, league, false);
+		StatsView statsView = new StatsView(this, league, true, false);
 		playerView.setOnLongClickListener(new View.OnLongClickListener() {
 			public boolean onLongClick(View v) {
 				modifyPlayerDialog(player);
@@ -310,30 +387,26 @@ public class BaseballPerformanceProjector extends Activity implements
 		playersListLayout.addView(playerView);
 		statsListLayout.addView(statsView);
 		// Add Player to user_player table
+		InterfaceControls uiControls = (InterfaceControls)findViewById(R.id.uiControls);
+		String date = uiControls.getDate();
+		BatterStats batterStats = new BatterStats(player.getPlayerId(), league_name, date,playerView.getHeader());
 		DatabaseHandler userDatabase = new DatabaseHandler(this);
+		userDatabase.addBatterStats(batterStats);
 		userDatabase.addUserPlayer(player);
 		userDatabase.close();
 	}
 
 	public void removePlayer(Player player) {
-		DatabaseHandler userDatabase = new DatabaseHandler(
-				BaseballPerformanceProjector.this);
+		DatabaseHandler userDatabase = new DatabaseHandler(BaseballPerformanceProjector.this);
 		userDatabase.removePlayer(player);
 		userDatabase.close();
+		
 		int playerIndex = getIndexOfPlayerId(player.getPlayerId());
 		LinearLayout playerListLayout = (LinearLayout) findViewById(R.id.playersListLayout);
 		LinearLayout statsListLayout = (LinearLayout) findViewById(R.id.statsListLayout);
-		PlayerView playerView = (PlayerView) playerListLayout
-				.getChildAt(playerIndex);
-		StatsView statsView = (StatsView) statsListLayout
-				.getChildAt(playerIndex);
-		for (int i = 0; i < playersArrayList.size(); i++) {
-			if (playersArrayList.get(i).getPlayerId()
-					.equals(player.getPlayerId())) {
-				playersArrayList.remove(i);
-				break;
-			}
-		}
+		PlayerView playerView = (PlayerView) playerListLayout.getChildAt(playerIndex);
+		StatsView statsView = (StatsView) statsListLayout.getChildAt(playerIndex);
+
 		if (playerView.getHeader().contains("Bench")) {
 			playerListLayout.removeView(playerView);
 			statsListLayout.removeView(statsView);
@@ -603,6 +676,7 @@ public class BaseballPerformanceProjector extends Activity implements
 		final DatabaseHandler database = new DatabaseHandler(this);
 		final League league = database.getLeague(league_name);
 		database.close();
+		
 		LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
 		final View settings_layout = inflater.inflate(R.layout.settings, null);
 		AlertDialog.Builder settingsAlert = new AlertDialog.Builder(this);
@@ -710,18 +784,32 @@ public class BaseballPerformanceProjector extends Activity implements
 		startingPitcherNumber.setNumber(league.getNumStartingPitchers());
 		reliefPitcherNumber.setNumber(league.getNumReliefPitchers());
 		
-		CheckBox checkbox_hits = (CheckBox)settings_layout.findViewById(R.id.checkbox_hits);
-		CheckBox checkbox_homeRuns = (CheckBox)settings_layout.findViewById(R.id.checkbox_homeRuns);
-		CheckBox checkbox_RBI = (CheckBox)settings_layout.findViewById(R.id.checkbox_RBI);
-		CheckBox checkbox_runs = (CheckBox)settings_layout.findViewById(R.id.checkbox_runs);
-		CheckBox checkbox_strikeouts = (CheckBox)settings_layout.findViewById(R.id.checkbox_strikeouts);
-		CheckBox checkbox_obp = (CheckBox)settings_layout.findViewById(R.id.checkbox_obp);
+		final CheckBox checkbox_hits = (CheckBox)settings_layout.findViewById(R.id.checkbox_hits);
+		final CheckBox checkbox_homeRuns = (CheckBox)settings_layout.findViewById(R.id.checkbox_homeRuns);
+		final CheckBox checkbox_RBI = (CheckBox)settings_layout.findViewById(R.id.checkbox_RBI);
+		final CheckBox checkbox_runs = (CheckBox)settings_layout.findViewById(R.id.checkbox_runs);
+		final CheckBox checkbox_strikeouts = (CheckBox)settings_layout.findViewById(R.id.checkbox_strikeouts);
+		final CheckBox checkbox_obp = (CheckBox)settings_layout.findViewById(R.id.checkbox_obp);
+		final CheckBox checkbox_walks = (CheckBox)settings_layout.findViewById(R.id.checkbox_walks);
+		final CheckBox checkbox_steals = (CheckBox)settings_layout.findViewById(R.id.checkbox_steals);
+		final CheckBox checkbox_netSteals = (CheckBox)settings_layout.findViewById(R.id.checkbox_netSteals);
+		final CheckBox checkbox_ops = (CheckBox)settings_layout.findViewById(R.id.checkbox_ops);
+		
+		checkbox_hits.setChecked(league.hasHits());
+		checkbox_homeRuns.setChecked(league.hasHomeRuns());
+		checkbox_RBI.setChecked(league.hasRBI());
+		checkbox_runs.setChecked(league.hasRuns());
+		checkbox_strikeouts.setChecked(league.hasStrikeouts());
+		checkbox_obp.setChecked(league.hasOBP());
+		checkbox_walks.setChecked(league.hasWalks());
+		checkbox_steals.setChecked(league.hasSteals());
+		checkbox_netSteals.setChecked(league.hasNetSteals());
+		checkbox_ops.setChecked(league.hasOPS());
 		
 		alert.show();
 		alert.setOnDismissListener(new OnDismissListener() {
 			@Override
 			public void onDismiss(DialogInterface arg0) {
-				Log.println(Log.DEBUG, "myDebug", "Inside settings onDismiss()");
 				if(makeDefaultTeamCheckbox.isChecked()) {
 					database.removeDefaultLeagueStatus();
 				}
@@ -740,7 +828,16 @@ public class BaseballPerformanceProjector extends Activity implements
 				league.setStartingPitchers(startingPitcherNumber.getNumber());
 				league.setReliefPitchers(reliefPitcherNumber.getNumber());
 				
-				
+				league.setHits(checkbox_hits.isChecked());
+				league.setHomeRuns(checkbox_homeRuns.isChecked());
+				league.setRBI(checkbox_RBI.isChecked());
+				league.setRuns(checkbox_runs.isChecked());
+				league.setStrikeouts(checkbox_strikeouts.isChecked());
+				league.setOBP(checkbox_obp.isChecked());
+				league.setWalks(checkbox_walks.isChecked());
+				league.setSteals(checkbox_steals.isChecked());
+				league.setNetSteals(checkbox_netSteals.isChecked());
+				league.setOPS(checkbox_ops.isChecked());
 				
 				database.updateLeague(league);
 			}
@@ -762,6 +859,8 @@ public class BaseballPerformanceProjector extends Activity implements
 
 	public void makeDailyProjections() {
 		InterfaceControls interfaceControls = (InterfaceControls) findViewById(R.id.uiControls);
+		DatabaseHandler database = new DatabaseHandler(this);
+		List<Player> playersArrayList = database.getAllUserPlayers(league_name);
 		String dateAndPlayerIds[] = new String[playersArrayList.size() + 1];
 		dateAndPlayerIds[0] = interfaceControls.getDate();
 		for (int i = 0; i < playersArrayList.size(); i++) {
@@ -784,8 +883,17 @@ public class BaseballPerformanceProjector extends Activity implements
 				"Function getIndexOfPlayerId() reaching failsafe not intended to be reached.");
 		return 0; // This should never be reached
 	}
+	
+	public void changeStatsViews(BatterStats batterStats) {
+		int index = getIndexOfPlayerId(batterStats.getPlayerId());
+		Log.println(Log.DEBUG, "myDebug", "PlayerId index: " + index);
+		LinearLayout statsListLayout = (LinearLayout) findViewById(R.id.statsListLayout);
+		StatsView statsView = (StatsView) statsListLayout.getChildAt(index);
 
-	private class WebServiceCall extends AsyncTask<String, Void, BatterStats[]> {
+		statsView.setStats(batterStats);
+	}
+
+	private class WebServiceCall extends AsyncTask<String, Void, String[][]> {
 		@Override
 		protected void onPreExecute() {
 			InterfaceControls interfaceControls = (InterfaceControls) findViewById(R.id.uiControls);
@@ -793,7 +901,7 @@ public class BaseballPerformanceProjector extends Activity implements
 	    }
 		
 		@Override
-		protected BatterStats[] doInBackground(String... dateAndPlayerIds) {
+		protected String[][] doInBackground(String... dateAndPlayerIds) {
 			String url = "http://threemuskets.com/BaseballApp/getBatterProjection.php";
 			// Log.println(Log.DEBUG, "myDebug", url);
 			String response = "ERROR";
@@ -827,72 +935,86 @@ public class BaseballPerformanceProjector extends Activity implements
 				return null;
 			}
 			Log.println(Log.DEBUG, "myDebug", "Response: " + response);
-			BatterStats[] batterStats = parseResponse(response, date);
-			return batterStats;
+			String[][] statsMatrix = parseResponse(response, date);
+			return statsMatrix;
 		}
 
 		@Override
-		protected void onPostExecute(BatterStats[] batterStats) {
-			if(batterStats.equals(null)) {
+		protected void onPostExecute(String[][] statsMatrix) {
+			if(statsMatrix.equals(null)) {
 				// Throw a toast alerting the user to try again later.
 				return;
 			}
-			for (int i = 0; i < batterStats.length; i++) {
-				changeStats(batterStats[i]);
+			DatabaseHandler database = new DatabaseHandler(BaseballPerformanceProjector.this);
+			for (int i = 0; i < statsMatrix.length; i++) {
+				//String[] statsRow = {playerId, date, hits, homeRuns, rbi, walks, runs, steals, netSteals, strikeouts, obp, ops};
+				BatterStats batterStats = database.getBatterStats(statsMatrix[i][0], league_name, statsMatrix[i][1]);
+				batterStats.setStats(statsMatrix[i][2], statsMatrix[i][3], statsMatrix[i][4],
+						statsMatrix[i][5], statsMatrix[i][6], statsMatrix[i][7], 
+						statsMatrix[i][8], statsMatrix[i][9], statsMatrix[i][10], 
+						statsMatrix[i][11]);
+				database.updateBatterStats(batterStats);
+				changeStatsViews(batterStats);
 			}
 			InterfaceControls interfaceControls = (InterfaceControls) findViewById(R.id.uiControls);
 			interfaceControls.setProjectPerformanceClickable(true);
 		}
 
-		public void changeStats(BatterStats batterStats) {
-			// Log.println(Log.DEBUG, "myDebug",
-			// "Calling getIndexOfPlayer with: " + playerId);
-			int index = getIndexOfPlayerId(batterStats.getPlayerId());
-			// Log.println(Log.DEBUG, "myDebug", "PlayerId index: " + index);
-			LinearLayout statsListLayout = (LinearLayout) findViewById(R.id.statsListLayout);
-			StatsView statsView = (StatsView) statsListLayout.getChildAt(index);
-			
-			String[] statsResults = new String[5];
-			statsResults[0] = batterStats.getHomeRuns();
-			statsResults[1] = batterStats.getRuns();
-			statsResults[2] = batterStats.getRbi();
-			statsResults[3] = batterStats.getNetSteals();
-			statsResults[4] = batterStats.getOBP();
-			
-			statsView.setStats(statsResults);
-		}
-
-		public BatterStats[] parseResponse(String response, String date) {
-			int numPlayers = countOccurrences(response, '*');
-			Log.println(Log.DEBUG, "myDebug", "Parsing: " + response);
-			BatterStats[] batterStats = new BatterStats[numPlayers];
+		public String[][] parseResponse(String fullResponse, String date) {
+			int numPlayers = countOccurrences(fullResponse, '*');
+			Log.println(Log.DEBUG, "myDebug", "Parsing: " + fullResponse);
+			String[][] batterStats = new String[numPlayers][];
 			for (int i = 0; i < numPlayers; i++) {
+				String response = fullResponse.substring(0, fullResponse.indexOf("*"));
+				fullResponse = fullResponse.substring(fullResponse.indexOf("*") + 1, fullResponse.length());
+				
 				String playerId;
+				String hits;
 				String homeRuns;
-				String runs;
 				String rbi;
+				String walks;
+				String runs;
+				String steals;
 				String netSteals;
+				String strikeouts;
 				String obp;
+				String ops;
 				
 				playerId = response.substring(0, response.indexOf(","));
 				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus playerId
 				
-				homeRuns = response.substring(0, response.indexOf(","));
-				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus homeRuns
+				hits = response.substring(0, response.indexOf(","));
+				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus hits
 				
-				runs = response.substring(0, response.indexOf(","));
-				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus runs
+				homeRuns = response.substring(0, response.indexOf(","));
+				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus home runs
 				
 				rbi = response.substring(0, response.indexOf(","));
 				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus rbi
 				
+				walks = response.substring(0, response.indexOf(","));
+				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus walks
+				
+				runs = response.substring(0, response.indexOf(","));
+				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus runs
+				
+				steals = response.substring(0, response.indexOf(","));
+				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus steals
+				
 				netSteals = response.substring(0, response.indexOf(","));
 				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus netSteals
 				
-				obp = response.substring(0, response.indexOf("*"));
-				response = response.substring(response.indexOf("*") + 1, response.length()); // Line minus obp
+				strikeouts = response.substring(0, response.indexOf(","));
+				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus strikeouts
 				
-				batterStats[i] = new BatterStats(playerId, date, homeRuns, runs, rbi, netSteals, obp);
+				obp = response.substring(0, response.indexOf(","));
+				response = response.substring(response.indexOf(",") + 1, response.length()); // Line minus obp
+				
+				ops = response;
+				
+				String[] statsRow = {playerId, date, hits, homeRuns, rbi, walks, runs, steals, netSteals, strikeouts, obp, ops};
+				
+				batterStats[i] = statsRow;
 			}
 			return batterStats;
 		}

@@ -254,34 +254,74 @@ public class League {
 		reliefPitchers = x;
 	}
 	
-	public void setHits(int x) {
+	public void setHits(boolean hasStat) {
+		int x = 0;
+		if(hasStat) {
+			x= 1;
+		}
 		hits = x;
 	}
-	public void setRBI(int x) {
+	public void setRBI(boolean hasStat) {
+		int x = 0;
+		if(hasStat) {
+			x= 1;
+		}
 		rbi = x;
 	}
-	public void setRuns(int x) {
+	public void setRuns(boolean hasStat) {
+		int x = 0;
+		if(hasStat) {
+			x= 1;
+		}
 		runs = x;
 	}
-	public void setHomeRuns(int x) {
+	public void setHomeRuns(boolean hasStat) {
+		int x = 0;
+		if(hasStat) {
+			x= 1;
+		}
 		homeRuns = x;
 	}
-	public void setWalks(int x) {
+	public void setWalks(boolean hasStat) {
+		int x = 0;
+		if(hasStat) {
+			x= 1;
+		}
 		walks = x;
 	}
-	public void setSteals(int x) {
+	public void setSteals(boolean hasStat) {
+		int x = 0;
+		if(hasStat) {
+			x= 1;
+		}
 		steals = x;
 	}
-	public void setNetSteals(int x) {
+	public void setNetSteals(boolean hasStat) {
+		int x = 0;
+		if(hasStat) {
+			x= 1;
+		}
 		netSteals = x;
 	}
-	public void setStrikeouts(int x) {
+	public void setStrikeouts(boolean hasStat) {
+		int x = 0;
+		if(hasStat) {
+			x= 1;
+		}
 		strikeouts = x;
 	}
-	public void setOBP(int x) {
+	public void setOBP(boolean hasStat) {
+		int x = 0;
+		if(hasStat) {
+			x= 1;
+		}
 		obp = x;
 	}
-	public void setOPS(int x) {
+	public void setOPS(boolean hasStat) {
+		int x = 0;
+		if(hasStat) {
+			x= 1;
+		}
 		ops = x;
 	}
 	

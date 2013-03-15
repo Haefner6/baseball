@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class StatsView extends LinearLayout {
-	public StatsView(Context context, League league, boolean isHeader) {
+	public StatsView(Context context, League league, boolean isBatter, boolean isHeader) {
 		super(context);
 		float scale = getContext().getResources().getDisplayMetrics().density;
 		int heightDP = (int) (41 * scale + 0.5f);
@@ -41,11 +41,11 @@ public class StatsView extends LinearLayout {
 					ViewGroup.LayoutParams.FILL_PARENT, innerHeightDP));
 		}
 
-		fillViews(context, linearLayout, league, isHeader);
+		fillViews(context, linearLayout, league, isBatter, isHeader);
 	}
 
 	public void fillViews(Context context, LinearLayout linearLayout,
-			League league, boolean isHeader) {
+			League league, boolean isBatter, boolean isHeader) {
 		// Log.println(Log.DEBUG, "myDebug", "Inside fillViews");
 		ArrayList<String> possibleStats = new ArrayList<String>();
 		ArrayList<String> viewableStats = new ArrayList<String>();
@@ -113,9 +113,10 @@ public class StatsView extends LinearLayout {
 		this.addView(frameLayout);
 	}
 
-	public void setStats(String[] stats) {
+	public void setStats(BatterStats batterStats) {
 		LinearLayout linearLayout = (LinearLayout) this.getChildAt(0);
 		int arrayIndex = 0;
+		String[] stats = batterStats.toArray();
 		for (int i = 0; i < linearLayout.getChildCount(); i = i + 2) {
 			TextView textView = (TextView) linearLayout.getChildAt(i);
 			// Log.println(Log.DEBUG, "myDebug", "Trying to change index " + i);
