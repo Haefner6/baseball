@@ -22,6 +22,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	// Tables
 	private static final String TABLE_LEAGUES = "leagues";
 	private static final String TABLE_BATTERS_STATS = "batterStats";
+	private static final String TABLE_PITCHER_STATS = "pitcherStats";
 	private static final String TABLE_USER_PLAYERS = "userPlayers";
 
 	// batterStats Table Column names
@@ -35,6 +36,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	private static final String BATTER_POSITION = "position";
 	private static final String BATTER_PLACED_POSITION = "placedPosition";
 
+	//PitcherStats Table Column names
+	private static final String PITCHER_ID = "id";
+	private static final String PITCHER_DATE = "date";
+	private static final String PITCHER_FIRST = "firstName";
+	private static final String PITCHER_LAST = "lastName";
+	private static final String PITCHER_THROWS = "throwHand";
+	private static final String PITCHER_TEAM = "team";
+	private static final String PITCHER_POSITION = "position";
+	
+	
+	
 	// League Settings
 	private static final String LEAGUE_ID = "leagueId";
 	private static final String LEAGUE_DEFAULT_LEAGUE = "defaultLeague";
@@ -60,6 +72,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	private static final String LEAGUE_STAT_K = "K";
 	private static final String LEAGUE_STAT_OBP = "OBP";
 	private static final String LEAGUE_STAT_OPS = "OPS";
+	
+	//Pitcher Stats
+	private static final String LEAGUE_STAT_WINS = "WINS";
+	private static final String LEAGUE_STAT_SAVES = "SAVES";
+	private static final String LEAGUE_STAT_STRIKEOUTS = "STRIKEOUTS";
+	private static final String LEAGUE_STAT_ERA = "ERA";
+	private static final String LEAGUE_STAT_WHIP = "WHIP";
+	
+	
 
 	public DatabaseHandler(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -77,6 +98,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				+ LEAGUE_STAT_K + " TEXT," + LEAGUE_STAT_OBP + " TEXT,"
 				+ LEAGUE_STAT_OPS + " TEXT," + BATTER_PLACED_POSITION + " TEXT"
 				+ ")";
+		
+		String CREATE_PITCHER_TABLE = "CREATE TABLE " + TABLE_PITCHER_STATS
+				+ "(" + PITCHER_ID + " TEXT," + PITCHER_DATE + " TEXT,"
+				+ PITCHER_LAST + " TEXT," + PITCHER_FIRST + " TEXT,"
+				+ PITCHER_THROWS + " TEXT," + PITCHER_POSITION
+				+ " TEXT" + ")";
+		
+		
 		String CREATE_USER_PLAYERS_TABLE = "CREATE TABLE " + TABLE_USER_PLAYERS
 				+ "(" + BATTER_ID + " TEXT," + LEAGUE_ID + " TEXT,"
 				+ BATTER_LAST + " TEXT," + BATTER_FIRST + " TEXT," + BATTER_BAT
@@ -96,10 +125,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				+ LEAGUE_STAT_R + " INTEGER," + LEAGUE_STAT_HR + " INTEGER,"
 				+ LEAGUE_STAT_BB + " INTEGER," + LEAGUE_STAT_SB + " INTEGER,"
 				+ LEAGUE_STAT_NSB + " INTEGER," + LEAGUE_STAT_K + " INTEGER,"
-				+ LEAGUE_STAT_OBP + " INTEGER," + LEAGUE_STAT_OPS + " INTEGER"
-				+ ")";
-
+				+ LEAGUE_STAT_OBP + " INTEGER," + LEAGUE_STAT_OPS + " INTEGER,"				
+				+ LEAGUE_STAT_WINS + " INTEGER," + LEAGUE_STAT_SAVES + " INTEGER,"
+				+ LEAGUE_STAT_STRIKEOUTS + " INTEGER," + LEAGUE_STAT_ERA + " INTEGER,"				
+				+ LEAGUE_STAT_WHIP + " INTEGER" + ")";
+		
 		db.execSQL(CREATE_BATTER_STATS_TABLE);
+		db.execSQL(CREATE_PITCHER_TABLE);
 		db.execSQL(CREATE_USER_PLAYERS_TABLE);
 		db.execSQL(CREATE_LEAGUES_TABLE);
 	}
@@ -118,7 +150,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public void dropTables() {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_BATTERS_STATS);
-
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_PITCHER_STATS);
+		
 		String CREATE_BATTER_STATS_TABLE = "CREATE TABLE "
 				+ TABLE_BATTERS_STATS + "(" + BATTER_ID + " TEXT," + LEAGUE_ID
 				+ " TEXT," + BATTER_DATE + " TEXT," + LEAGUE_STAT_H + " TEXT,"
@@ -128,6 +161,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				+ LEAGUE_STAT_K + " TEXT," + LEAGUE_STAT_OBP + " TEXT,"
 				+ LEAGUE_STAT_OPS + " TEXT," + BATTER_PLACED_POSITION + " TEXT"
 				+ ")";
+		
+		String CREATE_PITCHER_TABLE = "CREATE TABLE " + TABLE_PITCHER_STATS
+				+ "(" + PITCHER_ID + " TEXT," + PITCHER_DATE + " TEXT,"
+				+ PITCHER_LAST + " TEXT," + PITCHER_FIRST + " TEXT,"
+				+ PITCHER_THROWS + " TEXT," + PITCHER_POSITION
+				+ " TEXT" + ")";
+		
+		
 		String CREATE_USER_PLAYERS_TABLE = "CREATE TABLE " + TABLE_USER_PLAYERS
 				+ "(" + BATTER_ID + " TEXT PRIMARY KEY," + LEAGUE_ID + " TEXT,"
 				+ BATTER_LAST + " TEXT," + BATTER_FIRST + " TEXT," + BATTER_BAT
@@ -147,10 +188,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				+ LEAGUE_STAT_R + " INTEGER," + LEAGUE_STAT_HR + " INTEGER,"
 				+ LEAGUE_STAT_BB + " INTEGER," + LEAGUE_STAT_SB + " INTEGER,"
 				+ LEAGUE_STAT_NSB + " INTEGER," + LEAGUE_STAT_K + " INTEGER,"
-				+ LEAGUE_STAT_OBP + " INTEGER," + LEAGUE_STAT_OPS + " INTEGER"
-				+ ")";
+				+ LEAGUE_STAT_OBP + " INTEGER," + LEAGUE_STAT_OPS + " INTEGER,"				
+				+ LEAGUE_STAT_WINS + " INTEGER," + LEAGUE_STAT_SAVES + " INTEGER,"
+				+ LEAGUE_STAT_STRIKEOUTS + " INTEGER," + LEAGUE_STAT_ERA + " INTEGER,"				
+				+ LEAGUE_STAT_WHIP + " INTEGER" + ")";
+
 
 		db.execSQL(CREATE_BATTER_STATS_TABLE);
+		db.execSQL(CREATE_PITCHER_TABLE);
 		db.execSQL(CREATE_USER_PLAYERS_TABLE);
 		db.execSQL(CREATE_LEAGUES_TABLE);
 		db.close();
@@ -390,7 +435,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 					cursor.getInt(14), cursor.getInt(15), cursor.getInt(16),
 					cursor.getInt(17), cursor.getInt(18), cursor.getInt(19),
 					cursor.getInt(20), cursor.getInt(21), cursor.getInt(22),
-					cursor.getInt(23));
+					cursor.getInt(23),cursor.getInt(24),cursor.getInt(25),
+					cursor.getInt(26), cursor.getInt(27), cursor.getInt(28));
 		}
 		db.close();
 		return league;
@@ -456,7 +502,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		values.put(LEAGUE_STAT_K, booleanToInt(league.hasStrikeouts()));
 		values.put(LEAGUE_STAT_OBP, booleanToInt(league.hasOBP()));
 		values.put(LEAGUE_STAT_OPS, booleanToInt(league.hasOPS()));
-
+		
+		//Pitcher
+		values.put(LEAGUE_STAT_WINS, booleanToInt(league.hasWins()));
+		values.put(LEAGUE_STAT_SAVES, booleanToInt(league.hasSaves()));
+		values.put(LEAGUE_STAT_STRIKEOUTS, booleanToInt(league.hasPitcherStrikeouts()));
+		values.put(LEAGUE_STAT_ERA, booleanToInt(league.hasEra()));
+		values.put(LEAGUE_STAT_WHIP, booleanToInt(league.hasWhip()));
+		
 		// Inserting Row
 		db.insert(TABLE_LEAGUES, null, values);
 		db.close(); // Closing database connection
@@ -471,6 +524,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		db.execSQL(updateQuery);
 		
 		updateQuery = "DELETE FROM " + TABLE_BATTERS_STATS + " WHERE "
+				+ LEAGUE_ID + "='" + id + "';";
+		Log.println(Log.DEBUG, TAG, updateQuery);
+		db.execSQL(updateQuery);
+		
+		updateQuery = "DELETE FROM " + TABLE_PITCHER_STATS + " WHERE "
 				+ LEAGUE_ID + "='" + id + "';";
 		Log.println(Log.DEBUG, TAG, updateQuery);
 		db.execSQL(updateQuery);
@@ -511,7 +569,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				+ "," + LEAGUE_STAT_K + "="
 				+ booleanToInt(league.hasStrikeouts()) + "," + LEAGUE_STAT_OBP
 				+ "=" + booleanToInt(league.hasOBP()) + "," + LEAGUE_STAT_OPS
-				+ "=" + booleanToInt(league.hasOPS()) + " WHERE " + LEAGUE_ID
+				+ "=" + booleanToInt(league.hasOPS()) + "," + LEAGUE_STAT_WINS 
+				+ "=" + booleanToInt(league.hasWins()) + "," + LEAGUE_STAT_SAVES 
+				+ "=" + booleanToInt(league.hasSaves()) + "," + LEAGUE_STAT_STRIKEOUTS 
+				+ "=" + booleanToInt(league.hasPitcherStrikeouts()) + "," + LEAGUE_STAT_ERA 
+				+ "=" + booleanToInt(league.hasEra())  + "," + LEAGUE_STAT_WHIP 
+				+ "=" + booleanToInt(league.hasWhip())
+				+ " WHERE " + LEAGUE_ID
 				+ "='" + league.getLeagueId() + "';";
 		db.execSQL(updateQuery);
 		db.close();

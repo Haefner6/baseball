@@ -79,7 +79,7 @@ public class HomeScreen extends Activity {
 				if (!leagueNames.contains(name)) {
 					Log.println(Log.DEBUG, "myDebug", "All good.  Go!");
 					League league = new League(name, 0, 1,1,1,1,1,0,0,3,
-							1,2,2,2,0,1,1,1,0,0,1,1,1,0);
+							1,2,2,2,0,1,1,1,0,0,1,1,1,0,1,1,1,1,1);
 					Log.println(Log.DEBUG, "myDebug", "Newly Created League Pos: " +league.getBatterPositions().toString());
 					database.addLeague(league);
 					database.close();

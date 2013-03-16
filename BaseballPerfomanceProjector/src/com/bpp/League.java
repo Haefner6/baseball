@@ -27,10 +27,16 @@ public class League {
 	private int strikeouts;
 	private int obp;
 	private int ops;
+	//Pitchers
+	private int wins;
+	private int saves;
+	private int pitcherStrikeouts;
+	private int era;
+	private int whip;
 	
 	public League(String leagueId, int defaultLeague, int catchers,int firstBase,int secondBase,int shortStop,int thirdBase,int middle,int corner,int outfield,
 			int utility,int pitchers,int startingPitchers,int reliefPitchers,int hits,int rbi,int runs,int homeRuns,int walks,
-			int steals,int netSteals,int strikeouts,int obp,int ops) {
+			int steals,int netSteals,int strikeouts,int obp,int ops ,int saves, int wins, int pitcherStrikeouts, int era, int whip) {
 		this.leagueId = leagueId;
 		this.defaultLeague = defaultLeague;
 		this.catchers = catchers;
@@ -55,6 +61,11 @@ public class League {
 		this.strikeouts = strikeouts;
 		this.obp = obp;
 		this.ops = ops;
+		this.wins = wins;
+		this.saves = saves;
+		this.pitcherStrikeouts = pitcherStrikeouts;
+		this.era = era;
+		this.whip = whip;
 	}
 	
 	public boolean equals(League league) {
@@ -215,6 +226,46 @@ public class League {
 			return false;
 		}
 	}
+		
+		public boolean hasWins() {
+			if(wins == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public boolean hasSaves() {
+			if(saves == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public boolean hasPitcherStrikeouts() {
+			if(pitcherStrikeouts == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public boolean hasEra() {
+			if(era == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public boolean hasWhip() {
+			if(whip == 1) {
+				return true;
+			} else {
+				return false;
+			}
+	}
 	
 	public void setCatchers(int x) {
 		catchers = x;
@@ -324,6 +375,51 @@ public class League {
 		}
 		ops = x;
 	}
+	
+	public void setWins(boolean hasStat) {
+		int x = 0;
+		if(hasStat) {
+			x= 1;
+		}
+		wins = x;
+	}
+	public void setSaves(boolean hasStat) {
+		int x = 0;
+		if(hasStat) {
+			x= 1;
+		}
+		saves = x;
+	}
+	public void setPitcherStrikeouts(boolean hasStat) {
+		int x = 0;
+		if(hasStat) {
+			x= 1;
+		}pitcherStrikeouts = x;
+	}
+	public void setEra(boolean hasStat) {
+		int x = 0;
+		if(hasStat) {
+			x= 1;
+		}era = x;
+	}
+	public void setWhip(boolean hasStat) {
+		int x = 0;
+		if(hasStat) {
+			x= 1;
+		}whip = x;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public ArrayList<String> getBatterPositions() {
 		ArrayList<String> positions = new ArrayList<String>();
